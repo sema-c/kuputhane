@@ -1,15 +1,18 @@
 KÜTÜPHANE YÖNETİM SİSTEMİ
+
 1. Proje Genel Tanımı
-Bu proje, bir kütüphane yönetim sistemi oluşturmayı amaçlar. Sistem:
-Java Swing ile masaüstü arayüz sunar,
-Spring Boot mikroservis mimarisi ile backend işlemlerini yönetir,
-PostgreSQL veritabanı kullanır,
-REST API ile HTTP tabanlı haberleşme sağlar,
-API üzerinden veri aktarımında hem JSON hem de Google Protocol Buffers (Protobuf) destekler,
-Eureka (Netflix OSS) ile servis keşfi sağlar,
-Yetkilendirme, roller arası erişim hiyerarşisi ve işlem hakları ile detaylı bir kullanıcı kontrolü içerir.
+
+-Bu proje, bir kütüphane yönetim sistemi oluşturmayı amaçlar. Sistem:
+-Java Swing ile masaüstü arayüz sunar,
+-Spring Boot mikroservis mimarisi ile backend işlemlerini yönetir,
+-PostgreSQL veritabanı kullanır,
+-REST API ile HTTP tabanlı haberleşme sağlar,
+-API üzerinden veri aktarımında hem JSON hem de Google Protocol Buffers (Protobuf) destekler,
+-Eureka (Netflix OSS) ile servis keşfi sağlar,
+-Yetkilendirme, roller arası erişim hiyerarşisi ve işlem hakları ile detaylı bir kullanıcı kontrolü içerir.
 
 2. Kullanılan Teknolojiler ve Rolleri
+
 2.1. UML
 Kullanıcı Roller ve Yetkileri
 
