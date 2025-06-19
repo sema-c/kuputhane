@@ -82,7 +82,7 @@ Add, Delete, Edit, Drop, Search, Organize, Stock: Kitap, stok ve kullanıcı yö
 
 UML Diyagramı
 
-![UML Diyagramı](./assets/libuml.drawio)
+![UML Diyagramı](./assets/libuml.drawio.png)
 
 2.2. Database (SQL- UTF-8 )
 DB Server: PostgreSQL 17
@@ -107,5 +107,5 @@ ER (Entity-Relationship) Diyagramı
 
 Sistemdeki tabloları ve aralarındaki ilişkileri gösteren ER diyagramı aşağıdadır:
 
-![ER Diyagramı](./assets/kuputhane_er_diagram)
+![ER Diyagramı](./assets/kuputhane_er_diagram.PNG)
 
