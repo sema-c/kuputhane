@@ -80,6 +80,9 @@ Arayüzler ve Kullanıcı Etkileşimleri (Interfaces)
 Register, Login, Authentication: Giriş ve kayıt işlemleri için gerekli kullanıcı arayüzleri.
 Add, Delete, Edit, Drop, Search, Organize, Stock: Kitap, stok ve kullanıcı yönetimi işlemlerini kontrol eden işlevsel arayüzlerdir.
 
+UML Diyagramı
+
+![UML Diyagramı](./assets/libuml.drawio)
 
 2.2. Database (SQL- UTF-8 )
 DB Server: PostgreSQL 17
@@ -99,3 +102,10 @@ Interface: pgAdmin4
 Amaç: Kalıcı veri saklama (user, book, transaction vb.)
 Neden Seçildi: Open source, güçlü veri bütünlüğü, JSONB ve geniş veri tipi desteği (protobuff json zorunlu).
 Kullanım: Her mikroservis kendi veritabanı şemasına sahip.
+
+ER (Entity-Relationship) Diyagramı
+
+Sistemdeki tabloları ve aralarındaki ilişkileri gösteren ER diyagramı aşağıdadır:
+
+![ER Diyagramı](./assets/kuputhane_er_diagram)
+
