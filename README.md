@@ -137,3 +137,58 @@ Her mikroservis kendi veritabanı şemasına sahip.
 Sistemdeki tabloları ve aralarındaki ilişkileri gösteren ER diyagramı aşağıdadır:
 
 ![ER Diyagramı](./assets/kuputhane_er_diagram.PNG)
+
+### 2.3. C4 Modeli (Context - Container - Component - Code)
+
+#### 📌 Context Diyagramı
+
+Sistem dışı kullanıcılar ve sistem arasındaki ilişkiyi gösterir.
+
+Sisteme kimlerin eriştiği (Guest, Customer, Staff, Manager/CLevel) ve sistemin ne yaptığı (kitap görüntüleme, arama, ödünç alma/iade, ceza uygulama, yetki bazlı erişim) burada açıklanır.
+
+#### 🧱 Container Diyagramı
+
+Sistemin hangi uygulamalardan ve servislerden oluştuğunu gösterir:
+
+- **UI (Java Swing)**  
+  Kullanıcıların masaüstü üzerinden eriştiği arayüz.
+
+- **API Gateway (Spring Cloud Gateway)**  
+  Tüm servislerin dış dünyaya açıldığı API yönlendirme ve güvenlik katmanı.
+
+- **User Service (Spring Boot + JPA)**  
+  Kullanıcıya ait CRUD işlemleri (ekleme, düzenleme, silme, listeleme).
+
+- **Book Service (Spring Boot + JPA)**  
+  Kitap, yayınevi, kategori gibi yayın nesneleri ile ilgili işlemleri yönetir.
+
+- **PostgreSQL (DBMS)**  
+  Kalıcı veri saklama için kullanılan ilişkisel veritabanı.
+
+- **Eureka Server (Netflix Eureka)**  
+  Mikroservislerin birbirini bulmasını ve haberleşmesini sağlayan servis keşif aracı.
+
+#### 🧩 Component Diyagramı
+
+Her bir container içindeki alt bileşenleri gösterir.  
+Örnek olarak **Book Service** bileşenleri:
+
+- **BookController**  
+  HTTP isteklerini karşılar  
+  (Örn: `GET /books`, `POST /add`)
+
+- **BookServiceImpl**  
+  İş mantığının tanımlandığı ana servis sınıfıdır.
+
+- **BookRepository**  
+  JPA ile veritabanı işlemlerini gerçekleştirir.
+
+- **BookMapper**  
+  DTO ↔ Entity dönüşümlerinin yapıldığı katmandır.
+
+- **Book**  
+  JPA Entity sınıfı — kitap nesnesini temsil eder.
+
+  ## 4C Mimarisi Diyagramı
+
+![4C Mimarisi](./assets/4C.diagram.png)
