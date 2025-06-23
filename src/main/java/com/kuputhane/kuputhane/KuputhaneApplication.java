@@ -10,4 +10,5 @@ public class KuputhaneApplication {
         SpringApplication.run(KuputhaneApplication.class, args);
     }
 
+
 }
