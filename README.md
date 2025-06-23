@@ -187,7 +187,7 @@ Her bir container içindeki alt bileşenleri gösterir.
   DTO ↔ Entity dönüşümlerinin yapıldığı katmandır.
 
 - **Book**  
-  JPA Entity sınıfı — kitap nesnesini temsil eder.
+  JPA Entity sınıfı kitap nesnesini temsil eder.
 
   ## 4C Mimarisi Diyagramı
 
