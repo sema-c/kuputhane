@@ -140,13 +140,13 @@ Sistemdeki tabloları ve aralarındaki ilişkileri gösteren ER diyagramı aşa�
 
 ### 2.3. C4 Modeli (Context - Container - Component - Code)
 
-#### 📌 Context Diyagramı
+#### Context Diyagramı
 
 Sistem dışı kullanıcılar ve sistem arasındaki ilişkiyi gösterir.
 
 Sisteme kimlerin eriştiği (Guest, Customer, Staff, Manager/CLevel) ve sistemin ne yaptığı (kitap görüntüleme, arama, ödünç alma/iade, ceza uygulama, yetki bazlı erişim) burada açıklanır.
 
-#### 🧱 Container Diyagramı
+#### Container Diyagramı
 
 Sistemin hangi uygulamalardan ve servislerden oluştuğunu gösterir:
 
@@ -168,7 +168,7 @@ Sistemin hangi uygulamalardan ve servislerden oluştuğunu gösterir:
 - **Eureka Server (Netflix Eureka)**  
   Mikroservislerin birbirini bulmasını ve haberleşmesini sağlayan servis keşif aracı.
 
-#### 🧩 Component Diyagramı
+#### Component Diyagramı
 
 Her bir container içindeki alt bileşenleri gösterir.  
 Örnek olarak **Book Service** bileşenleri:
