@@ -27,3 +27,19 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# Java build klasörü
+target/
+
+# IDEA proje dosyaları
+.idea/
+*.iml
+
+# Derlenmiş class dosyaları
+*.class
+
+# Sistem dosyaları
+.DS_Store
+
+
+
