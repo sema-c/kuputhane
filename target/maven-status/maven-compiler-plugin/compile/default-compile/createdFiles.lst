@@ -1,0 +1,5 @@
+com/kuputhane/kuputhane/model/Book.class
+com/kuputhane/kuputhane/service/BookService.class
+com/kuputhane/kuputhane/KuputhaneApplication.class
+com/kuputhane/kuputhane/controller/BookController.class
+com/kuputhane/kuputhane/repository/BookRepository.class
