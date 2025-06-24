@@ -29,10 +29,10 @@ public class BookController {
         return service.getById(id).orElse(null);
     }
 
-    /*@GetMapping("/search")
+    @GetMapping("/search")
     public List<Book> searchBooks(@RequestParam String q) {
         return bookRepository.findByTitleContainingIgnoreCase(q);
-    }*/
+    }
 
     @PostMapping
     public Book save(@RequestBody Book book) {
