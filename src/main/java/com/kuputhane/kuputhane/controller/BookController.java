@@ -1,19 +1,22 @@
 package com.kuputhane.kuputhane.controller;
 
 import com.kuputhane.kuputhane.model.Book;
+import com.kuputhane.kuputhane.repository.BookRepository;
 import com.kuputhane.kuputhane.service.BookService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+        import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
-@CrossOrigin // frontend erişimi için
 public class BookController {
-    private final BookService service;
 
-    public BookController(BookService service) {
+    private final BookService service;
+    private final BookRepository bookRepository;
+
+    public BookController(BookService service, BookRepository bookRepository) {
         this.service = service;
+        this.bookRepository = bookRepository;
     }
 
     @GetMapping
@@ -24,6 +27,11 @@ public class BookController {
     @GetMapping("/{id}")
     public Book getById(@PathVariable Long id) {
         return service.getById(id).orElse(null);
+    }
+
+    @GetMapping("/search")
+    public List<Book> searchBooks(@RequestParam String q) {
+        return bookRepository.findByTitleContainingIgnoreCase(q);
     }
 
     @PostMapping
