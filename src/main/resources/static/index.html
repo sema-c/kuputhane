@@ -10,7 +10,7 @@
 </head>
 <body>
 <header>
-    <div class="logo">📚 <span>Kütüphane</span></div>
+    <div class="logo">📚 <span>Küpüthane</span></div>
     <nav>
         <a href="#" class="active">Ana Sayfa</a>
         <a href="#">Kitaplar</a>
@@ -21,8 +21,11 @@
 
 <main>
     <section class="search-section">
-        <input type="text" placeholder="Kitap ara...">
-        <button><i class="fas fa-search"></i></button>
+        <label for="searchInput"></label>
+        <input type="text" id="searchInput" placeholder="Kitap ara...">
+        <a id="searchRedirectBtn" href="search.html">
+            <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </a>
     </section>
 
     <section class="book-container">
@@ -47,5 +50,6 @@
     <p>© 2025 Kütüphane Yönetim Sistemi</p>
     <p>İletişim: kutuphane@ornek.com | Tel: (0312) 000 00 00</p>
 </footer>
+<script src="script.js"></script>
 </body>
 </html>
