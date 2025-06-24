@@ -17,16 +17,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) {
-        user.setPasswordHash(hashPassword(user.getPasswordHash())); // güvenli hale getir
+        if (repo.findByUsername(user.getUsername()).isPresent()) {
+            return null; // kullanıcı zaten var
+        }
+
+        String hashedPassword = hashPassword(user.getPassword());
+        user.setPasswordHash(hashedPassword); // doğru alanı kullan!
         return repo.save(user);
     }
 
     @Override
-    public Optional<User> login(String email, String password) {
-        return repo.findByEmail(email)
+    public Optional<User> loginByUsername(String username, String password) {
+        return repo.findByUsername(username)
                 .filter(u -> checkPassword(password, u.getPasswordHash()));
     }
-
 
     private String hashPassword(String password) {
         return Integer.toHexString(password.hashCode()); // örnek hash

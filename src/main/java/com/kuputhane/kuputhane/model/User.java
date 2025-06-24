@@ -20,10 +20,9 @@ public class User {
     private String role;
     private String email;
 
-    public void setPasswordHash(String s) {
-    }
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private String passwordHash;   // veritabanına kaydedilen hash
 
-    public String getPasswordHash() {
-        return null;
-    }
 }

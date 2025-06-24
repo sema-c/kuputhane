@@ -1,6 +1,8 @@
 package com.kuputhane.kuputhane.controller;
 import com.kuputhane.kuputhane.model.User;
 import com.kuputhane.kuputhane.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -16,13 +18,22 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return service.register(user);
+    public ResponseEntity<?> register(@RequestBody User user) {
+        User created = service.register(user);
+        if (created == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Kullanıcı zaten mevcut");
+        }
+        return ResponseEntity.ok(created);
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody User user) {
-        Optional<User> found = (Optional<User>) service.login(user.getUsername(), user.getPassword());
-        return found.orElse(null);
+    public ResponseEntity<?> login(@RequestBody User user) {
+        Optional<User> found = service.loginByUsername(user.getUsername(), user.getPassword());
+        if (found.isPresent()) {
+            return ResponseEntity.ok(found.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Geçersiz giriş");
+        }
     }
+
 }

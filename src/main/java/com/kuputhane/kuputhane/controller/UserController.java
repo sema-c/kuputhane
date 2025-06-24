@@ -26,13 +26,12 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
-        String email = credentials.get("email");
+        String username = credentials.get("username");
         String password = credentials.get("password");
 
-        return userService.login(email, password)
+        return userService.loginByUsername(username, password)
                 .<ResponseEntity<?>>map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials"));
     }
-
 
 }

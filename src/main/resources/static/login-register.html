@@ -1,32 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Giriş / Kayıt</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body>
 
-<div class="bg-white p-8 rounded shadow-md w-full max-w-md">
-  <h2 class="text-2xl font-bold mb-4 text-center" id="form-title">Giriş Yap</h2>
-  <form id="auth-form" class="space-y-4">
-    <div>
-      <label for="username" class="block">Kullanıcı Adı</label>
-      <input type="text" id="username" class="w-full border rounded px-3 py-2" required />
-    </div>
-    <div>
-      <label for="password" class="block">Şifre</label>
-      <input type="password" id="password" class="w-full border rounded px-3 py-2" required />
-    </div>
-    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded">Devam Et</button>
-  </form>
-  <p class="text-sm text-center mt-4">
-    <span id="toggle-text">Hesabınız yok mu?</span>
-    <button id="toggle-button" class="text-blue-600 underline ml-1">Kayıt Ol</button>
-  </p>
-  <p id="auth-message" class="text-center text-red-500 mt-2 hidden"></p>
-</div>
+<header>
+  <div class="logo">📚 <span>Kütüphane</span></div>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Just+Another+Hand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <nav>
+    <a href="index.html">Ana Sayfa</a>
+    <a href="#">Kitaplar</a>
+    <a href="#" class="active">Giriş</a>
+    <a href="#">İletişim</a>
+  </nav>
+</header>
+
+<main style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+  <div style="background-color: #2c2c3e; padding: 2rem; border-radius: 12px; width: 100%; max-width: 450px; box-shadow: 0 0 10px rgba(0,0,0,0.2);">
+    <h2 style="text-align: center; color: var(--gold); margin-bottom: 1.5rem;" id="form-title">Giriş Yap</h2>
+
+    <form id="auth-form" style="display: flex; flex-direction: column; gap: 1rem;">
+
+      <div id="register-fields" style="display: none; flex-direction: column; gap: 1rem;">
+        <input type="text" id="firstName" placeholder="Ad" class="form-input" />
+        <input type="text" id="lastName" placeholder="Soyadı" class="form-input" />
+        <input type="text" id="phoneNumber" placeholder="Telefon" class="form-input" />
+        <input type="email" id="email" placeholder="Email" class="form-input" />
+      </div>
+
+      <input type="text" id="username" placeholder="Kullanıcı Adı" class="form-input" required />
+      <input type="password" id="password" placeholder="Şifre" class="form-input" required />
+
+      <button type="submit" style="background-color: var(--purple); color: white; padding: 0.7rem; border: none; border-radius: 8px; font-weight: bold;">Devam Et</button>
+    </form>
+
+    <p id="toggle-area" style="text-align: center; margin-top: 1rem;">
+      <span id="toggle-text">Hesabınız yok mu?</span>
+      <button id="toggle-button" style="background: none; border: none; color: var(--gold); text-decoration: underline; cursor: pointer;">Kayıt Ol</button>
+    </p>
+
+    <p id="auth-message" style="text-align: center; margin-top: 1rem; font-weight: bold;"></p>
+  </div>
+</main>
+
+<footer>
+  <p>© 2025 Kütüphane Yönetim Sistemi</p>
+  <p>İletişim: kutuphane@ornek.com | Tel: (0312) 000 00 00</p>
+</footer>
 
 <script>
   const form = document.getElementById("auth-form");
@@ -34,6 +60,7 @@
   const toggleButton = document.getElementById("toggle-button");
   const toggleText = document.getElementById("toggle-text");
   const authMessage = document.getElementById("auth-message");
+  const registerFields = document.getElementById("register-fields");
 
   let isLogin = true;
 
@@ -42,39 +69,101 @@
     formTitle.textContent = isLogin ? "Giriş Yap" : "Kayıt Ol";
     toggleText.textContent = isLogin ? "Hesabınız yok mu?" : "Zaten hesabınız var mı?";
     toggleButton.textContent = isLogin ? "Kayıt Ol" : "Giriş Yap";
-    authMessage.classList.add("hidden");
+    authMessage.textContent = "";
+    registerFields.style.display = isLogin ? "none" : "flex";
   });
+
+  function validateRegisterFields() {
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
+    const phoneNumber = document.getElementById("phoneNumber").value.trim();
+    const email = document.getElementById("email").value.trim();
+
+    authMessage.textContent = "";
+
+    const phonePattern = /^05\d{9}$/;
+    if (!phonePattern.test(phoneNumber)) {
+      showMessage("Telefon numarası 11 haneli olmalı ve 05 ile başlamalı.", false);
+      return false;
+    }
+
+    if (!email.includes("@")) {
+      showMessage("Geçerli bir email adresi giriniz.", false);
+      return false;
+    }
+
+    if (firstName === "" || lastName === "") {
+      showMessage("Ad ve soyad boş bırakılamaz.", false);
+      return false;
+    }
+
+    return true;
+  }
+
+  function showMessage(message, isSuccess) {
+    authMessage.textContent = message;
+    authMessage.style.color = isSuccess ? "lightgreen" : "#ff4d4d";
+  }
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+
+    if (!isLogin && !validateRegisterFields()) return;
 
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
     const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
 
+    let payload = { username, password };
+
+    if (!isLogin) {
+      payload = {
+        ...payload,
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        phoneNumber: document.getElementById("phoneNumber").value,
+        email: document.getElementById("email").value
+      };
+    }
+
     fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify(payload),
     })
-            .then((res) => res.json())
-            .then((data) => {
-              if (data && data.username) {
-                alert(isLogin ? "Giriş başarılı" : "Kayıt başarılı");
-                // yönlendirme veya kullanıcı bilgisi saklama işlemleri
-              } else {
-                authMessage.textContent = isLogin
-                        ? "Giriş başarısız. Bilgileri kontrol edin."
-                        : "Kayıt başarısız. Kullanıcı mevcut olabilir.";
-                authMessage.classList.remove("hidden");
+            .then(async (res) => {
+              if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error(errorText || "Sunucu hatası oluştu.");
               }
+              return res.json();
             })
-            .catch(() => {
-              authMessage.textContent = "Bir hata oluştu. Lütfen tekrar deneyin.";
-              authMessage.classList.remove("hidden");
+            .then(() => {
+              showMessage(isLogin ? "Giriş başarılı" : "Kayıt başarılı", true);
+              setTimeout(() => {
+                window.location.href = "/index.html";
+              }, 1000);
+            })
+            .catch((err) => {
+              showMessage(err.message, false);
             });
   });
 </script>
+
+<style>
+  .form-input {
+    padding: 0.7rem;
+    border-radius: 8px;
+    border: none;
+    width: 100%;
+    background-color: #1e1e2f;
+    color: white;
+  }
+  .form-input::placeholder {
+    color: #ccc;
+  }
+</style>
+
 </body>
 </html>
