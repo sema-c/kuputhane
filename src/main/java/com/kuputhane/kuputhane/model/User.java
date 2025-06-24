@@ -1,10 +1,12 @@
 package com.kuputhane.kuputhane.model;
-
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "users")
 @Getter
 @Setter

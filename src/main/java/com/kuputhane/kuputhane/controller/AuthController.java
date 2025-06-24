@@ -1,5 +1,4 @@
 package com.kuputhane.kuputhane.controller;
-
 import com.kuputhane.kuputhane.model.User;
 import com.kuputhane.kuputhane.service.UserService;
 import org.springframework.web.bind.annotation.*;
