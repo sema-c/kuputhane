@@ -18,4 +18,11 @@ public class User {
     private String username;
     private String password;
     private String role;
+
+    public void setPasswordHash(String s) {
+    }
+
+    public String getPasswordHash() {
+        return "";
+    }
 }

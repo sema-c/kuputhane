@@ -22,7 +22,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public User login(@RequestBody User user) {
-        Optional<User> found = service.login(user.getUsername(), user.getPassword());
+        Optional<User> found = (Optional<User>) service.login(user.getUsername(), user.getPassword());
         return found.orElse(null);
     }
 }
