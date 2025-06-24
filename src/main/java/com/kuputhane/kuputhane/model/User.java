@@ -23,6 +23,6 @@ public class User {
     }
 
     public String getPasswordHash() {
-        return "";
+        return null;
     }
 }
