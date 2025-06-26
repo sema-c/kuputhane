@@ -1,6 +1,6 @@
-package com.kuputhane.kuputhane.service;
+package com.kuputhane.bookservice.service;
 
-import com.kuputhane.kuputhane.model.Book;
+import com.kuputhane.bookservice.model.Book;
 
 import java.util.List;
 import java.util.Optional;

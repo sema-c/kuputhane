@@ -1,6 +1,6 @@
-package com.kuputhane.kuputhane.repository;
+package com.kuputhane.userservice.repository;
 
-import com.kuputhane.kuputhane.model.User;
+import com.kuputhane.userservice.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

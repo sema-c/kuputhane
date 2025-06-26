@@ -1,6 +1,6 @@
-package com.kuputhane.kuputhane.repository;
+package com.kuputhane.bookservice.repository;
 
-import com.kuputhane.kuputhane.model.Book;
+import com.kuputhane.bookservice.model.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

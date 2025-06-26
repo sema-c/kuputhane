@@ -1,7 +1,7 @@
-package com.kuputhane.kuputhane.service;
+package com.kuputhane.userservice.service;
 
-import com.kuputhane.kuputhane.model.User;
-import com.kuputhane.kuputhane.repository.UserRepository;
+import com.kuputhane.userservice.model.User;
+import com.kuputhane.userservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
-package com.kuputhane.kuputhane.service;
+package com.kuputhane.bookservice.service;
 
-import com.kuputhane.kuputhane.model.Book;
-import com.kuputhane.kuputhane.repository.BookRepository;
+import com.kuputhane.bookservice.model.Book;
+import com.kuputhane.bookservice.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

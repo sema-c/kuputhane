@@ -1,8 +1,8 @@
-package com.kuputhane.kuputhane.controller;
+package com.kuputhane.bookservice.controller;
 
-import com.kuputhane.kuputhane.model.Book;
-import com.kuputhane.kuputhane.repository.BookRepository;
-import com.kuputhane.kuputhane.service.BookService;
+import com.kuputhane.bookservice.model.Book;
+import com.kuputhane.bookservice.repository.BookRepository;
+import com.kuputhane.bookservice.service.BookService;
 import org.springframework.web.bind.annotation.*;
 
         import java.util.List;

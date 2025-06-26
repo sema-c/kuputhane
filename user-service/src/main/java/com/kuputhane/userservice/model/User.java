@@ -1,4 +1,4 @@
-package com.kuputhane.kuputhane.model;
+package com.kuputhane.userservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 

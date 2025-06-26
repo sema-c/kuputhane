@@ -5,7 +5,13 @@ spring:
   application:
     name: eureka-service
 
+  web:
+    resources:
+      add-mappings=false:
+
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+
+

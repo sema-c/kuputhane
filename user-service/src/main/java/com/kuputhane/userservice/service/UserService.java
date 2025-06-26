@@ -1,6 +1,6 @@
-package com.kuputhane.kuputhane.service;
+package com.kuputhane.userservice.service;
 
-import com.kuputhane.kuputhane.model.User;
+import com.kuputhane.userservice.model.User;
 
 import java.util.Optional;
 

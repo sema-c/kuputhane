@@ -1,6 +1,6 @@
-package com.kuputhane.kuputhane.controller;
-import com.kuputhane.kuputhane.model.User;
-import com.kuputhane.kuputhane.service.UserService;
+package com.kuputhane.userservice.controller;
+import com.kuputhane.userservice.model.User;
+import com.kuputhane.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
