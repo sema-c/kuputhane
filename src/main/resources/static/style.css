@@ -139,3 +139,15 @@ footer {
         width: 80%;
     }
 }
+
+ .form-input {
+     padding: 0.7rem;
+     border-radius: 8px;
+     border: none;
+     width: 100%;
+     background-color: #1e1e2f;
+     color: white;
+ }
+.form-input::placeholder {
+    color: #ccc;
+}
