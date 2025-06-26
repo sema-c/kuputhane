@@ -1,13 +1,13 @@
-package com.kuputhane.kuputhane;
+package com.kuputhane.userservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class KuputhaneApplication {
+public class UserServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(KuputhaneApplication.class, args);
+        SpringApplication.run(UserServiceApplication.class, args);
     }
 
 }
