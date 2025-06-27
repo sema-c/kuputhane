@@ -7,11 +7,9 @@ spring:
 
   web:
     resources:
-      add-mappings=false:
+      add-mappings: true
 
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
-
-
