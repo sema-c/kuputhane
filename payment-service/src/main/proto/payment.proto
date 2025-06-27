@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_package = "com.kuputhane.payment.protobuf";
+option java_outer_classname = "PaymentProto";
+
+message Payment {
+  int64 id = 1;
+  double amount = 2;
+  string method = 3;
+  string status = 4;
+}
