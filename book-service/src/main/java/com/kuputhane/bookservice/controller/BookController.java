@@ -3,6 +3,7 @@ package com.kuputhane.bookservice.controller;
 import com.kuputhane.bookservice.model.Book;
 import com.kuputhane.bookservice.repository.BookRepository;
 import com.kuputhane.bookservice.service.BookService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
         import java.util.List;
@@ -25,9 +26,12 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public Book getById(@PathVariable Long id) {
-        return service.getById(id).orElse(null);
+    public ResponseEntity<Book> getById(@PathVariable Long id) {
+        return service.getById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
+
 
     @GetMapping("/search")
     public List<Book> searchBooks(@RequestParam String q) {

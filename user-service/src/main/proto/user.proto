@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_package = "com.kuputhane.user.protobuf";
+option java_outer_classname = "UserProto";
+
+message User {
+  int64 id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string email = 4;
+  string phoneNumber = 5;
+}

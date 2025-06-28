@@ -1,5 +1,5 @@
 :root {
-    --purple: #8224e3;
+    --purple: #5e05b4;
     --gold: #f4c430;
     --bg-dark: #1e1e2f;
     --bg-light: #f3f3f3;
@@ -23,11 +23,24 @@ header {
     padding: 1rem 2rem;
 }
 
-.logo {
-    font-family: 'Just Another Hand', cursive;
-    font-size: 2rem;
-    color: var(--gold);
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
+
+.logo-img {
+    width: 50px;
+    height: auto;
+}
+
+.logo-text {
+    font-family: 'Just Another Hand', cursive;
+    font-size: 2.2rem;
+    color: #FFD700; /* altın sarısı */
+    margin-top: 10px;
+}
+
 
 nav a {
     color: white;

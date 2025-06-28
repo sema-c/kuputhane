@@ -4,6 +4,7 @@ import com.kuputhane.userservice.model.User;
 import com.kuputhane.userservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,11 +19,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(User user) {
         if (repo.findByUsername(user.getUsername()).isPresent()) {
-            return null; // kullanıcı zaten var
+            return null;
         }
 
         String hashedPassword = hashPassword(user.getPassword());
-        user.setPasswordHash(hashedPassword); // doğru alanı kullan!
+        user.setPasswordHash(hashedPassword);
         return repo.save(user);
     }
 
@@ -30,6 +31,26 @@ public class UserServiceImpl implements UserService {
     public Optional<User> loginByUsername(String username, String password) {
         return repo.findByUsername(username)
                 .filter(u -> checkPassword(password, u.getPasswordHash()));
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+
+    }
+
+    @Override
+    public User updateUser(Long id, User user) {
+        return null;
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return List.of();
     }
 
     private String hashPassword(String password) {
