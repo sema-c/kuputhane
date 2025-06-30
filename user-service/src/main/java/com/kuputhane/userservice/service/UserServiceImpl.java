@@ -1,5 +1,6 @@
 package com.kuputhane.userservice.service;
 
+import com.kuputhane.userservice.model.Role;
 import com.kuputhane.userservice.model.User;
 import com.kuputhane.userservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,13 @@ public class UserServiceImpl implements UserService {
 
         String hashedPassword = hashPassword(user.getPassword());
         user.setPasswordHash(hashedPassword);
+        user.setPassword(null);
+
+        user.setRole(Role.USER);
+
         return repo.save(user);
     }
+
 
     @Override
     public Optional<User> loginByUsername(String username, String password) {

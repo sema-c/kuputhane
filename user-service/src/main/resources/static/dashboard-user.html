@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kullanıcı Paneli</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">📚 <span>Kütüphane</span></div>
+    <nav>
+        <a href="index.html">Ana Sayfa</a>
+        <a href="#" class="active">Panel</a>
+        <a href="#" onclick="logout()">Çıkış</a>
+    </nav>
+</header>
+
+<main style="padding: 2rem; color: white;">
+    <h1>📖 Kullanıcı Paneli</h1>
+
+    <section>
+        <h2>Kitap Ara</h2>
+        <input type="text" id="searchQuery" placeholder="Kitap adı girin..." class="form-input">
+        <button onclick="searchBooks()" class="btn">Ara</button>
+        <ul id="searchResults"></ul>
+    </section>
+
+    <hr>
+
+    <section>
+        <h2>Ödünç Alınan Kitaplarım</h2>
+        <ul id="borrowedBooks"></ul>
+    </section>
+</main>
+
+<footer>
+    <p>© 2025 Kütüphane Yönetim Sistemi</p>
+</footer>
+
+<script>
+    function logout() {
+        window.location.href = "login-register.html";
+    }
+
+    function searchBooks() {
+        const q = document.getElementById("searchQuery").value;
+        fetch(`http://localhost:8082/api/books/search?q=${q}`)
+            .then(res => res.json())
+            .then(data => {
+                const list = document.getElementById("searchResults");
+                list.innerHTML = "";
+                data.forEach(book => {
+                    const li = document.createElement("li");
+                    li.textContent = `${book.title} - ${book.author}`;
+                    const btn = document.createElement("button");
+                    btn.textContent = "Ödünç Al";
+                    btn.onclick = () => borrowBook(book.id);
+                    li.appendChild(btn);
+                    list.appendChild(li);
+                });
+            });
+    }
+
+    function borrowBook(bookId) {
+        fetch(`http://localhost:8082/api/books/lend/${bookId}`, { method: 'POST' })
+            .then(res => res.text())
+            .then(msg => alert(msg));
+    }
+</script>
+
+</body>
+</html>

@@ -27,12 +27,20 @@
 
     <form id="auth-form" style="display: flex; flex-direction: column; gap: 1rem;">
 
+      <!-- ... önceki kodlar değişmedi -->
+
       <div id="register-fields" style="display: none; flex-direction: column; gap: 1rem;">
         <input type="text" id="firstName" placeholder="Ad" class="form-input" />
         <input type="text" id="lastName" placeholder="Soyadı" class="form-input" />
         <input type="text" id="phoneNumber" placeholder="Telefon" class="form-input" />
         <input type="email" id="email" placeholder="Email" class="form-input" />
+
+        <select id="role" class="form-input">
+          <option value="USER" selected>Kullanıcı</option>
+          <option value="LIBRARIAN">Görevli (Librarian)</option>
+        </select>
       </div>
+
 
       <input type="text" id="username" placeholder="Kullanıcı Adı" class="form-input" required />
       <input type="password" id="password" placeholder="Şifre" class="form-input" required />

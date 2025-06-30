@@ -1,58 +1,15 @@
-fetch("/api/books")
-    .then(function (response) {
-    if (!response.ok)
-        throw new Error("Network response was not ok");
-    return response.json();
-})
-    .then(function (data) {
-    console.log("Kitaplar:", data);
-    var list = document.getElementById("book-list");
-    data.forEach(function (book) {
-        var item = document.createElement("li");
-        item.textContent = "".concat(book.title, " - ").concat(book.author);
-        list === null || list === void 0 ? void 0 : list.appendChild(item);
-    });
-})
-    .catch(function (error) { return console.error("Veri çekilemedi:", error); });
-window.addEventListener('DOMContentLoaded', function () {
-    fetch('/api/books')
-        .then(function (res) { return res.json(); })
-        .then(function (books) {
-        var list = document.getElementById('book-list');
-        books.forEach(function (book) {
-            var li = document.createElement('li');
-            li.textContent = "".concat(book.title, " - ").concat(book.author);
-            list === null || list === void 0 ? void 0 : list.appendChild(li);
-        });
-    })
-        .catch(function (err) { return console.error("Kitaplar alınamadı:", err); });
-});
-document.addEventListener('DOMContentLoaded', function () {
-    const btn = document.getElementById('searchBtn');
-    const input = document.getElementById('searchInput');
-
-    if (btn && input) {
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            const query = input.value.trim();
-            if (query === "") {
-                window.location.href = "search.html";
-            } else {
-                window.location.href = `search.html?q=${encodeURIComponent(query)}`;
-            }
-        });
-    }
-});
-
+// --- Giriş / Kayıt formu kontrolü
 const form = document.getElementById("auth-form");
 const formTitle = document.getElementById("form-title");
 const toggleButton = document.getElementById("toggle-button");
 const toggleText = document.getElementById("toggle-text");
 const authMessage = document.getElementById("auth-message");
 const registerFields = document.getElementById("register-fields");
+const roleSelect = document.getElementById("role"); // ✅ role select eklendi
 
 let isLogin = true;
 
+// --- Giriş <-> Kayıt geçişi
 toggleButton.addEventListener("click", () => {
     isLogin = !isLogin;
     formTitle.textContent = isLogin ? "Giriş Yap" : "Kayıt Ol";
@@ -60,8 +17,10 @@ toggleButton.addEventListener("click", () => {
     toggleButton.textContent = isLogin ? "Kayıt Ol" : "Giriş Yap";
     authMessage.textContent = "";
     registerFields.style.display = isLogin ? "none" : "flex";
+    roleSelect.style.display = isLogin ? "none" : "block"; // ✅ rol select görünürlüğü
 });
 
+// --- Kayıt alanı doğrulama
 function validateRegisterFields() {
     const firstName = document.getElementById("firstName").value.trim();
     const lastName = document.getElementById("lastName").value.trim();
@@ -89,11 +48,13 @@ function validateRegisterFields() {
     return true;
 }
 
+// --- Geri bildirim mesajı
 function showMessage(message, isSuccess) {
     authMessage.textContent = message;
     authMessage.style.color = isSuccess ? "lightgreen" : "#ff4d4d";
 }
 
+// --- Form gönderimi
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -117,7 +78,8 @@ form.addEventListener("submit", (e) => {
             firstName: document.getElementById("firstName").value,
             lastName: document.getElementById("lastName").value,
             phoneNumber: document.getElementById("phoneNumber").value,
-            email: document.getElementById("email").value
+            email: document.getElementById("email").value,
+            role: roleSelect.value // ✅ rol bilgisi eklendi
         };
     }
 
@@ -133,13 +95,40 @@ form.addEventListener("submit", (e) => {
             }
             return res.json();
         })
-        .then(() => {
+        .then((response) => {
             showMessage(isLogin ? "Giriş başarılı" : "Kayıt başarılı", true);
+
             setTimeout(() => {
-                window.location.href = "/index.html";
+                // ✅ Rol bilgisine göre yönlendir
+                if (response.role === 'USER') {
+                    window.location.href = "/dashboard-user.html";
+                } else if (response.role === 'LIBRARIAN') {
+                    window.location.href = "/dashboard-librarian.html";
+                } else {
+                    window.location.href = "/index.html";
+                }
             }, 1000);
         })
         .catch((err) => {
             showMessage(err.message, false);
         });
+});
+
+
+// --- Kitap arama butonu (Ana sayfa / search kısmı için)
+document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('searchBtn');
+    const input = document.getElementById('searchInput');
+
+    if (btn && input) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const query = input.value.trim();
+            if (query === "") {
+                window.location.href = "search.html";
+            } else {
+                window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+            }
+        });
+    }
 });

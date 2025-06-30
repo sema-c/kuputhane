@@ -1,4 +1,5 @@
 package com.kuputhane.userservice.model;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,18 +12,21 @@ import lombok.*;
 @Getter
 @Setter
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
     private String password;
-    private String role;
-    private String email;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    private String email;
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private String passwordHash;   // veritabanına kaydedilen hash
 
+    private String passwordHash;
 }

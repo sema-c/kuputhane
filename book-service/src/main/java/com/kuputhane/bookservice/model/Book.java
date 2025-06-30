@@ -2,6 +2,8 @@ package com.kuputhane.bookservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "books")
 @Getter
@@ -16,6 +18,8 @@ public class Book {
     private String author;
     private String isbn;
     private String location;
+    private boolean lent;
+    private LocalDate dueDate;
 
     @Column(name = "availability_status")
     private String availabilityStatus;
@@ -28,5 +32,4 @@ public class Book {
 
     @Column(name = "publisher_id")
     private Integer publisherId;
-
 }

@@ -3,6 +3,7 @@ package com.kuputhane.paymentservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,4 +26,6 @@ public class Payment {
     private String status;
 
     private LocalDateTime timestamp;
+
+    private LocalDate date;
 }

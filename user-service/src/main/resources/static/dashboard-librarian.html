@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Librarian Paneli</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">📚 <span>Kütüphane</span></div>
+    <nav>
+        <a href="index.html">Ana Sayfa</a>
+        <a href="#" class="active">Librarian</a>
+        <a href="#" onclick="logout()">Çıkış</a>
+    </nav>
+</header>
+
+<main style="padding: 2rem; color: white;">
+    <h1>📚 Librarian Paneli</h1>
+
+    <section>
+        <h2>Geciken Kitaplar</h2>
+        <button onclick="loadLateBooks()">Yenile</button>
+        <ul id="lateBooks"></ul>
+    </section>
+
+    <hr>
+
+    <section>
+        <h2>Kitap Ödünç Ver</h2>
+        <input type="number" id="bookId" placeholder="Kitap ID" class="form-input">
+        <button onclick="lendBook()">Ödünç Ver</button>
+    </section>
+</main>
+
+<footer>
+    <p>© 2025 Kütüphane Yönetim Sistemi</p>
+</footer>
+
+<script>
+    function logout() {
+        window.location.href = "login-register.html";
+    }
+
+    function loadLateBooks() {
+        fetch("http://localhost:8082/api/books/late")
+            .then(res => res.json())
+            .then(data => {
+                const list = document.getElementById("lateBooks");
+                list.innerHTML = "";
+                data.forEach(book => {
+                    const li = document.createElement("li");
+                    li.textContent = `${book.title} - Teslim Tarihi: ${book.dueDate}`;
+                    const btn = document.createElement("button");
+                    btn.textContent = "Ceza Ver";
+                    btn.onclick = () => applyPenalty(book.id);
+                    li.appendChild(btn);
+                    list.appendChild(li);
+                });
+            });
+    }
+
+    function applyPenalty(bookId) {
+        const daysLate = prompt("Kaç gün gecikti?");
+        fetch(`http://localhost:8083/api/payments/penalty/apply/${bookId}?daysLate=${daysLate}`, {
+            method: "POST",
+            headers: {
+                "Role": "LIBRARIAN"
+            }
+        })
+            .then(res => res.text())
+            .then(msg => alert(msg));
+    }
+
+    function lendBook() {
+        const id = document.getElementById("bookId").value;
+        fetch(`http://localhost:8082/api/books/lend/${id}`, { method: "POST" })
+            .then(res => res.text())
+            .then(msg => alert(msg));
+    }
+</script>
+
+</body>
+</html>
