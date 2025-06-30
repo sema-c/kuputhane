@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Kullanıcı Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Just+Another+Hand&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-    <div class="logo">📚 <span>Kütüphane</span></div>
+    <div class="logo-container">
+        <img src="/img/logo.png" class="logo-img">
+        <span class="logo-text">Küpüthanem</span>
+    </div>
+
     <nav>
         <a href="index.html">Ana Sayfa</a>
         <a href="#" class="active">Panel</a>
@@ -36,6 +41,7 @@
 
 <footer>
     <p>© 2025 Kütüphane Yönetim Sistemi</p>
+    <p>İletişim: kutuphane@ornek.com | Tel: (0312) 000 00 00</p>
 </footer>
 
 <script>
@@ -68,6 +74,5 @@
             .then(msg => alert(msg));
     }
 </script>
-
 </body>
 </html>

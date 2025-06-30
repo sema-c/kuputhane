@@ -1,6 +1,8 @@
 package com.kuputhane.userservice.controller;
 
 import com.kuputhane.userservice.dto.LoginRequest;
+import com.kuputhane.userservice.dto.RegisterRequest;
+import com.kuputhane.userservice.dto.RegisterResponse;
 import com.kuputhane.userservice.model.Role;
 import com.kuputhane.userservice.model.User;
 import com.kuputhane.userservice.repository.UserRepository;
@@ -18,45 +20,26 @@ import java.util.Optional;
 public class AuthController {
 
     private final UserService service;
-    private final UserRepository userRepository;
 
-    public AuthController(UserService service, UserRepository userRepository) {
+    public AuthController(UserService service) {
         this.service = service;
-        this.userRepository = userRepository;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        User created = service.register(user);
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        User created = service.register(request);
         if (created == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Kullanıcı zaten mevcut");
         }
-        return ResponseEntity.ok(created);
+        return ResponseEntity.ok(new RegisterResponse(created.getUsername(), created.getRole().name()));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        Optional<User> found = service.loginByUsername(user.getUsername(), user.getPassword());
-        if (found.isPresent()) {
-            return ResponseEntity.ok(found.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Geçersiz giriş");
-        }
-    }
-
-    @PostMapping("/login/librarian")
-    public ResponseEntity<?> loginLibrarian(@RequestBody LoginRequest request) {
-        Optional<User> userOpt = userRepository.findByEmailAndRole(request.getEmail(), Role.LIBRARIAN);
-
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        Optional<User> userOpt = service.loginByUsername(request.getUsername(), request.getPassword());
         if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            if (user.getPasswordHash().equals(request.getPassword())) {
-                return ResponseEntity.ok(user); // Giriş başarılı, user objesi döner
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Şifre yanlış.");
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Librarian bulunamadı.");
+            return ResponseEntity.ok(userOpt.get());
         }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Geçersiz giriş");
     }
 }
