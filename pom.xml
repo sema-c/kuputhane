@@ -5,18 +5,17 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Ana pom artık Spring Boot parent'ı referans alıyor -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.5.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
 
     <groupId>com.kuputhane</groupId>
     <artifactId>kuputhane</artifactId>
     <version>1.0.0</version>
-    <packaging>pom</packaging> <!-- Ana proje olduğuna dikkat! -->
+    <packaging>pom</packaging>
     <name>kuputhane</name>
     <description>Kütüphane Mikroservis Parent Projesi</description>
 
@@ -25,15 +24,14 @@
         <spring-cloud.version>2025.0.0</spring-cloud.version>
     </properties>
 
-    <!-- Alt modüller burada listeleniyor -->
     <modules>
         <module>eureka-service</module>
         <module>user-service</module>
         <module>book-service</module>
         <module>payment-service</module>
+        <module>permission-service</module>
     </modules>
 
-    <!-- Spring Cloud için BOM tanımı -->
     <dependencyManagement>
         <dependencies>
             <dependency>

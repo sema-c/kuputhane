@@ -3,7 +3,6 @@ package com.kuputhane.paymentservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,21 +10,27 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "Payments")
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "payment_id")
+    private Long paymentId;
 
-    private Long userId;
-
+    @Column(nullable = false)
     private Double amount;
 
+    @Column(nullable = false)
     private String method;
 
     private String status;
 
     private LocalDateTime timestamp;
 
-    private LocalDate date;
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Column(name = "borrow_id")
+    private Long borrowId;
 }
