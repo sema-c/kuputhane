@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package permission;
+
+option java_multiple_files = true;
+option java_package = "com.kuputhane.permission.protobuf";
+option java_outer_classname = "PermissionProto";
+
+message Permission {
+  int32 id = 1;
+  string action = 2;
+  string resource = 3;
+  int32 accessLevel = 4;
+  int32 parentId = 5;
+  string roleName = 6;
+}
+
+message GetAllPermissionsResponse {
+  repeated Permission permissions = 1;
+}
+
+message GetPermissionResponse {
+  Permission permission = 1;
+}
+
+message CreatePermissionRequest {
+  string action = 1;
+  string resource = 2;
+  int32 accessLevel = 3;
+  int32 parentId = 4;
+  string roleName = 5;
+}
+
+message CreatePermissionResponse {
+  int32 id = 1;
+}
