@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Kütüphane</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Just+Another+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Just+Another+Hand&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
 <header>
     <div class="logo-container">
-        <img src="/img/logo.png" class="logo-img">
+        <img src="/img/logo.png" class="logo-img" alt="" />
         <span class="logo-text">Küpüthanem</span>
     </div>
 
@@ -26,19 +27,13 @@
 <main>
     <section class="search-section">
         <label for="searchInput"></label>
-        <input type="text" id="searchInput" placeholder="Kitap ara...">
+        <input type="text" id="searchInput" placeholder="Kitap ara..." />
         <button id="searchBtn"><i class="fas fa-search"></i></button>
     </section>
 
-    <section class="book-container"></section>
+    <section id="bookList" class="book-container"></section>
 
-    <div class="pagination">
-        <button>&laquo;</button>
-        <button class="active">1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>&raquo;</button>
-    </div>
+    <div class="pagination"></div>
 </main>
 
 <footer>
@@ -46,6 +41,112 @@
     <p>İletişim: kutuphane@ornek.com | Tel: (0312) 000 00 00</p>
 </footer>
 
-<script src="/script.js"></script>
+<script>
+    let currentPage = 0;
+    const pageSize = 6;
+    let totalPages = 1;
+
+    function fetchBooks(page = 0) {
+        fetch(`http://localhost:8082/api/books?page=${page}&size=${pageSize}`)
+            .then(res => {
+                if (!res.ok) throw new Error("Kitaplar alınamadı");
+                return res.json();
+            })
+            .then(data => {
+                const books = data.content || data;
+                totalPages = data.totalPages || 1;
+                renderBooks(books);
+                renderPagination();
+            })
+            .catch(err => {
+                console.error("Kitaplar alınamadı:", err);
+                document.getElementById("bookList").innerHTML = "<p>Kitaplar yüklenirken hata oluştu.</p>";
+            });
+    }
+
+    function renderBooks(books) {
+        const container = document.getElementById("bookList");
+        container.innerHTML = "";
+
+        if (books.length === 0) {
+            container.innerHTML = "<p>Hiç kitap bulunamadı.</p>";
+            return;
+        }
+
+        books.forEach(book => {
+            const div = document.createElement("div");
+            div.className = "book-card";
+            div.innerHTML = `
+        <h3>${book.title}</h3>
+        <p>Yazar: ${book.author}</p>
+        <p>Yayın Yılı: ${book.year || book.publishedYear || "-"}</p>
+        <p class="${book.lent ? 'borrowed' : 'available'}">
+          Durum: ${book.lent ? "Ödünçte" : "Müsait"}
+        </p>
+      `;
+            container.appendChild(div);
+        });
+    }
+
+    function renderPagination() {
+        const pagination = document.querySelector(".pagination");
+        pagination.innerHTML = "";
+
+        if (totalPages <= 1) return;
+
+        const prevBtn = document.createElement("button");
+        prevBtn.innerHTML = "&laquo;";
+        prevBtn.disabled = currentPage === 0;
+        prevBtn.onclick = () => {
+            if (currentPage > 0) {
+                currentPage--;
+                fetchBooks(currentPage);
+            }
+        };
+        pagination.appendChild(prevBtn);
+
+        for (let i = 0; i < totalPages; i++) {
+            const btn = document.createElement("button");
+            btn.textContent = (i + 1).toString();
+            btn.className = i === currentPage ? "active" : "";
+            btn.onclick = () => {
+                currentPage = i;
+                fetchBooks(currentPage);
+            };
+            pagination.appendChild(btn);
+        }
+
+        const nextBtn = document.createElement("button");
+        nextBtn.innerHTML = "&raquo;";
+        nextBtn.disabled = currentPage === totalPages - 1;
+        nextBtn.onclick = () => {
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                fetchBooks(currentPage);
+            }
+        };
+        pagination.appendChild(nextBtn);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        fetchBooks(currentPage);
+
+        const btn = document.getElementById('searchBtn');
+        const input = document.getElementById('searchInput');
+
+        if (btn && input) {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const query = input.value.trim();
+                if (query === "") {
+                    window.location.href = "search.html";
+                } else {
+                    window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+                }
+            });
+        }
+    });
+</script>
+
 </body>
 </html>

@@ -4,45 +4,50 @@ import com.kuputhane.bookservice.dto.BookDTO;
 import com.kuputhane.bookservice.mapper.BookMapper;
 import com.kuputhane.bookservice.model.Book;
 import com.kuputhane.bookservice.repository.BookRepository;
-import com.kuputhane.bookservice.service.BookService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.*;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/books")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:8081")
 public class BookController {
 
-    private final BookService service;
     private final BookRepository bookRepository;
 
-    public BookController(BookService service, BookRepository bookRepository) {
-        this.service = service;
+    public BookController(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
     @GetMapping
-    public List<Book> getAll() {
-        return service.getAllBooks();
-    }
+    public ResponseEntity<Map<String, Object>> getBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Book> bookPage = bookRepository.findAll(pageable);
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Book> getById(@PathVariable Long id) {
-        return service.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        List<BookDTO> bookDTOs = bookPage.getContent()
+                .stream()
+                .map(BookMapper::toDTO)
+                .toList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", bookDTOs);
+        response.put("currentPage", bookPage.getNumber());
+        response.put("totalItems", bookPage.getTotalElements());
+        response.put("totalPages", bookPage.getTotalPages());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam String q) {
-        List<Book> books = bookRepository.findByTitleContainingIgnoreCase(q);
-        List<BookDTO> result = books.stream()
+        List<BookDTO> result = bookRepository.findByTitleContainingIgnoreCase(q).stream()
                 .map(BookMapper::toDTO)
                 .toList();
         return ResponseEntity.ok(result);
     }
-
 }
