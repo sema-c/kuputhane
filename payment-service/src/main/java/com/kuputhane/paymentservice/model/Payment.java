@@ -36,4 +36,3 @@ public class Payment {
     @Column(name = "borrow_id")
     private Long borrowId;
 }
-
