@@ -1,5 +1,7 @@
 package com.kuputhane.bookservice.controller;
 
+import com.kuputhane.bookservice.dto.BookDTO;
+import com.kuputhane.bookservice.mapper.BookMapper;
 import com.kuputhane.bookservice.model.Book;
 import com.kuputhane.bookservice.repository.BookRepository;
 import com.kuputhane.bookservice.service.BookService;
@@ -34,9 +36,14 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public List<Book> searchBooks(@RequestParam String q) {
-        return bookRepository.findByTitleContainingIgnoreCase(q);
+    public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam String q) {
+        List<Book> books = bookRepository.findByTitleContainingIgnoreCase(q);
+        List<BookDTO> result = books.stream()
+                .map(BookMapper::toDTO)
+                .toList();
+        return ResponseEntity.ok(result);
     }
+
 
     @PostMapping
     public Book save(@RequestBody Book book) {
