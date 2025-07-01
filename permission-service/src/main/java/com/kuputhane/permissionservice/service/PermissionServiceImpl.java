@@ -50,9 +50,16 @@ public class PermissionServiceImpl implements PermissionService {
         List<Permission> result = new ArrayList<>(children);
 
         for (Permission child : children) {
-            result.addAll(fetchChildren(child)); // recursive DFS
+            result.addAll(fetchChildren(child));
         }
 
         return result;
+    }
+
+    @Override
+    public boolean hasAccess(Integer roleId, Long permissionId) {
+        List<Permission> allPermissions = getAllByRoleRecursive(roleId);
+        return allPermissions.stream()
+                .anyMatch(p -> Objects.equals(p.getId(), permissionId));
     }
 }

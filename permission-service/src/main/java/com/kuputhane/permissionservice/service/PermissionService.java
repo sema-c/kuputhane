@@ -5,8 +5,9 @@ import java.util.List;
 
 public interface PermissionService {
     List<Permission> getAll();
-    List<Permission> getAllByRoleRecursive(Integer roleId);
     Permission getById(Long id);
     Permission save(Permission permission);
     void delete(Long id);
+    List<Permission> getAllByRoleRecursive(Integer roleId);
+    boolean hasAccess(Integer roleId, Long permissionId);
 }

@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
+@CrossOrigin(origins = "*")
 public class BookController {
 
     private final BookService service;
@@ -44,43 +45,4 @@ public class BookController {
         return ResponseEntity.ok(result);
     }
 
-
-    @PostMapping
-    public Book save(@RequestBody Book book) {
-        return service.save(book);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
-    }
-
-    @GetMapping("/late")
-    public ResponseEntity<?> getLateBooks(@RequestHeader("Role") String role) {
-        if (!"LIBRARIAN".equalsIgnoreCase(role)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Yetkisiz erişim.");
-        }
-        return ResponseEntity.ok(service.getLateBooks());
-    }
-
-    @PostMapping("/lend/{bookId}")
-    public ResponseEntity<?> lendBook(@PathVariable Long bookId, @RequestHeader("Role") String role) {
-        if (!"LIBRARIAN".equalsIgnoreCase(role)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Sadece librarian ödünç verebilir.");
-        }
-        return service.lendBook(bookId);
-    }
-
-    @PostMapping("/return/{bookId}")
-    public ResponseEntity<?> returnBook(@PathVariable Long bookId) {
-        return service.returnBook(bookId);
-    }
-
-    @PostMapping("/extend/{bookId}")
-    public ResponseEntity<?> extendBook(@PathVariable Long bookId, @RequestHeader("Role") String role) {
-        if (!"USER".equalsIgnoreCase(role)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Sadece kullanıcı teslim süresini uzatabilir.");
-        }
-        return service.extendBook(bookId);
-    }
 }

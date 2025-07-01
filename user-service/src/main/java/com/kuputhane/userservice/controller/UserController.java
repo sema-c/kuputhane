@@ -2,6 +2,7 @@ package com.kuputhane.userservice.controller;
 
 import com.kuputhane.userservice.dto.RegisterRequest;
 import com.kuputhane.userservice.model.User;
+import com.kuputhane.userservice.repository.UserRepository;
 import com.kuputhane.userservice.service.UserService;
 import com.kuputhane.userservice.util.RoleAccessChecker;
 import com.kuputhane.userservice.util.RoleHierarchyBuilder;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -20,6 +22,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private final RoleNode roleTree = RoleHierarchyBuilder.buildRoleTree();
 
@@ -55,6 +60,13 @@ public class UserController {
 
         return ResponseEntity.ok(userService.getUserById(id));
     }
+    @GetMapping("/users/{id}/role")
+    public ResponseEntity<String> getUserRole(@PathVariable Long id) {
+        Optional<User> userOpt = userRepository.findById(id);
+        return userOpt
+                .map(user -> ResponseEntity.ok(user.getRole().name()))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user, @RequestHeader("role") String requesterRole) {
@@ -74,4 +86,6 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }
