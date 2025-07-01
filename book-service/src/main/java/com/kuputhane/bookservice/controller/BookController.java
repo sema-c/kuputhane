@@ -48,7 +48,6 @@ public class BookController {
         service.delete(id);
     }
 
-    // 🔐 Sadece LIBRARIAN: Geciken kitapları listele
     @GetMapping("/late")
     public ResponseEntity<?> getLateBooks(@RequestHeader("Role") String role) {
         if (!"LIBRARIAN".equalsIgnoreCase(role)) {
@@ -57,7 +56,6 @@ public class BookController {
         return ResponseEntity.ok(service.getLateBooks());
     }
 
-    // 🔐 Sadece LIBRARIAN: Kitap ödünç ver
     @PostMapping("/lend/{bookId}")
     public ResponseEntity<?> lendBook(@PathVariable Long bookId, @RequestHeader("Role") String role) {
         if (!"LIBRARIAN".equalsIgnoreCase(role)) {
@@ -66,13 +64,11 @@ public class BookController {
         return service.lendBook(bookId);
     }
 
-    // 🔓 Herkes: Kitap teslim et
     @PostMapping("/return/{bookId}")
     public ResponseEntity<?> returnBook(@PathVariable Long bookId) {
         return service.returnBook(bookId);
     }
 
-    // 🔐 Sadece USER: Teslim tarihini uzat
     @PostMapping("/extend/{bookId}")
     public ResponseEntity<?> extendBook(@PathVariable Long bookId, @RequestHeader("Role") String role) {
         if (!"USER".equalsIgnoreCase(role)) {

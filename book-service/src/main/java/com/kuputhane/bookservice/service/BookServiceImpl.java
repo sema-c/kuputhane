@@ -86,5 +86,4 @@ public class BookServiceImpl implements BookService {
 
         return ResponseEntity.ok("Teslim süresi uzatıldı.");
     }
-
 }
