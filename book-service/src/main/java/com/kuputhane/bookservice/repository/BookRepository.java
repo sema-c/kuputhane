@@ -11,9 +11,10 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByTitleContainingIgnoreCase(String title);
 
-    @Query("SELECT c.name FROM Category c WHERE c.id = :id")
+    @Query(value = "SELECT name FROM categories WHERE id = :id", nativeQuery = true)
     String findCategoryNameById(@Param("id") Long id);
 
-    @Query("SELECT p.name FROM Publisher p WHERE p.id = :id")
+    @Query(value = "SELECT name FROM publishers WHERE id = :id", nativeQuery = true)
     String findPublisherNameById(@Param("id") Long id);
+
 }

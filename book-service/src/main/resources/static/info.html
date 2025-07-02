@@ -72,14 +72,19 @@
         window.location.href = '../user/index.html';
     }
 
-    fetch(`http://localhost:8082/books/${bookId}`)
-        .then(response => response.json())
+    fetch(`http://localhost:8082/api/books/${bookId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Kitap bulunamadı');
+            }
+            return response.json();
+        })
         .then(data => {
             document.getElementById('bookImage').src = `/img/${bookId}.jpg`;
-            document.getElementById('title').textContent = data.title;
-            document.getElementById('author').textContent = data.author;
-            document.getElementById('category').textContent = data.categoryName || data.categoryId;
-            document.getElementById('publisher').textContent = data.publisherName || data.publisherId;
+            document.getElementById('title').textContent = data.title || 'Bilinmiyor';
+            document.getElementById('author').textContent = data.author || 'Bilinmiyor';
+            document.getElementById('category').textContent = data.categoryName || data.categoryId || 'Bilinmiyor';
+            document.getElementById('publisher').textContent = data.publisherName || data.publisherId || 'Bilinmiyor';
             document.getElementById('status').textContent = data.available ? 'Mevcut' : 'Ödünçte';
 
             const borrowButton = document.getElementById('borrowButton');
@@ -87,6 +92,10 @@
                 borrowButton.disabled = true;
                 borrowButton.textContent = "Mevcut Değil";
             }
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            alert("Kitap bilgisi alınamadı.");
         });
 
     function borrowBook() {
@@ -107,6 +116,9 @@
                 } else {
                     alert("İşlem başarısız oldu.");
                 }
+            })
+            .catch(() => {
+                alert("Sunucuya ulaşılamadı.");
             });
     }
 </script>

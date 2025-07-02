@@ -3,7 +3,11 @@ package com.kuputhane.bookservice.controller;
 import com.kuputhane.bookservice.dto.BookDTO;
 import com.kuputhane.bookservice.mapper.BookMapper;
 import com.kuputhane.bookservice.model.Book;
+import com.kuputhane.bookservice.model.Category;
+import com.kuputhane.bookservice.model.Publisher;
 import com.kuputhane.bookservice.repository.BookRepository;
+import com.kuputhane.bookservice.repository.CategoryRepository;
+import com.kuputhane.bookservice.repository.PublisherRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.*;
@@ -16,9 +20,15 @@ import java.util.*;
 public class BookController {
 
     private final BookRepository bookRepository;
+    private final CategoryRepository categoryRepository;
+    private final PublisherRepository publisherRepository;
 
-    public BookController(BookRepository bookRepository) {
+    public BookController(BookRepository bookRepository,
+                          CategoryRepository categoryRepository,
+                          PublisherRepository publisherRepository) {
         this.bookRepository = bookRepository;
+        this.categoryRepository = categoryRepository;
+        this.publisherRepository = publisherRepository;
     }
 
     @GetMapping
@@ -45,12 +55,12 @@ public class BookController {
 
     @GetMapping("/search")
     public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam String q) {
-        List<BookDTO> result = bookRepository.findByTitleContainingIgnoreCase(q).stream()
+        List<BookDTO> result = bookRepository.findByTitleContainingIgnoreCase(q)
+                .stream()
                 .map(BookMapper::toDTO)
                 .toList();
         return ResponseEntity.ok(result);
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
@@ -61,12 +71,15 @@ public class BookController {
 
         Book book = optionalBook.get();
 
-        String categoryName = bookRepository.findCategoryNameById(Long.valueOf(book.getCategoryId()));
-        String publisherName = bookRepository.findPublisherNameById(Long.valueOf(book.getPublisherId()));
+        String categoryName = categoryRepository.findById((long) book.getCategoryId())
+                .map(Category::getName)
+                .orElse("Kategori Yok");
+
+        String publisherName = publisherRepository.findById((long) book.getPublisherId())
+                .map(Publisher::getName)
+                .orElse("Yayınevi Yok");
 
         BookDTO dto = BookMapper.toDetailedDTO(book, categoryName, publisherName);
         return ResponseEntity.ok(dto);
     }
-
-
 }
