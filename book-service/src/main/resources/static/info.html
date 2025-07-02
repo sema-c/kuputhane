@@ -50,7 +50,7 @@
 <body>
 
 <div class="book-card">
-    <img id="bookImage" class="book-cover" src="" alt="Kitap Kapak">
+    <img id="bookImage" class="book-cover" src="" alt="Kitap Kapak" onerror="this.src='/img/default.jpg'" />
     <div class="info">
         <h2 id="title">Kitap Adı</h2>
         <p><strong>Yazar:</strong> <span id="author"></span></p>
@@ -75,7 +75,7 @@
     fetch(`http://localhost:8082/books/${bookId}`)
         .then(response => response.json())
         .then(data => {
-            document.getElementById('bookImage').src = `/img/books/${bookId}.jpg`;
+            document.getElementById('bookImage').src = `/img/${bookId}.jpg`;
             document.getElementById('title').textContent = data.title;
             document.getElementById('author').textContent = data.author;
             document.getElementById('category').textContent = data.categoryName || data.categoryId;

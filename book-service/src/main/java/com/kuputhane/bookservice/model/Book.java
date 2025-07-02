@@ -34,4 +34,11 @@ public class Book {
 
     @Column(name = "publisher_id")
     private Integer publisherId;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    public Boolean getAvailable() {
+        return null;
+    }
 }

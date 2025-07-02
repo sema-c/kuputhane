@@ -13,5 +13,17 @@ public class BookMapper {
                 book.getYear()
         );
     }
+
+    public static BookDTO toDetailedDTO(Book book, String categoryName, String publisherName) {
+        BookDTO dto = new BookDTO();
+        dto.setId(book.getId());
+        dto.setTitle(book.getTitle());
+        dto.setAuthor(book.getAuthor());
+        dto.setYear(book.getYear());
+        dto.setAvailable(book.getAvailable());
+        dto.setCategoryName(categoryName);
+        dto.setPublisherName(publisherName);
+        return dto;
+    }
 }
 

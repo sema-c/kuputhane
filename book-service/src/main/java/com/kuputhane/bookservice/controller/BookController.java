@@ -51,11 +51,22 @@ public class BookController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/books/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        Optional<Book> book = bookRepository.findById(id);
-        return book.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Book book = optionalBook.get();
+
+        String categoryName = bookRepository.findCategoryNameById(Long.valueOf(book.getCategoryId()));
+        String publisherName = bookRepository.findPublisherNameById(Long.valueOf(book.getPublisherId()));
+
+        BookDTO dto = BookMapper.toDetailedDTO(book, categoryName, publisherName);
+        return ResponseEntity.ok(dto);
     }
+
 
 }
