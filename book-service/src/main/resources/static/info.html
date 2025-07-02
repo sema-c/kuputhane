@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kitap Bilgisi</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f8f5fc;
+            padding: 30px;
+        }
+
+        .book-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 0 10px #c8b9f0;
+        }
+
+        .book-cover {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .info {
+            margin-top: 15px;
+        }
+
+        #borrowButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #6a0dad;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #borrowButton:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<div class="book-card">
+    <img id="bookImage" class="book-cover" src="" alt="Kitap Kapak">
+    <div class="info">
+        <h2 id="title">Kitap Adı</h2>
+        <p><strong>Yazar:</strong> <span id="author"></span></p>
+        <p><strong>Kategori:</strong> <span id="category"></span></p>
+        <p><strong>Yayınevi:</strong> <span id="publisher"></span></p>
+        <p><strong>Durum:</strong> <span id="status"></span></p>
+    </div>
+    <button id="borrowButton" onclick="borrowBook()">Ödünç Al</button>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const bookId = params.get('id');
+    const userRole = sessionStorage.getItem('userRole');
+    const userId = sessionStorage.getItem('userId');
+
+    if (userRole === 'memur') {
+        alert('Bu sayfaya erişim yetkiniz yok.');
+        window.location.href = '../user/index.html';
+    }
+
+    fetch(`http://localhost:8082/books/${bookId}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('bookImage').src = `/img/books/${bookId}.jpg`;
+            document.getElementById('title').textContent = data.title;
+            document.getElementById('author').textContent = data.author;
+            document.getElementById('category').textContent = data.categoryName || data.categoryId;
+            document.getElementById('publisher').textContent = data.publisherName || data.publisherId;
+            document.getElementById('status').textContent = data.available ? 'Mevcut' : 'Ödünçte';
+
+            const borrowButton = document.getElementById('borrowButton');
+            if (!data.available) {
+                borrowButton.disabled = true;
+                borrowButton.textContent = "Mevcut Değil";
+            }
+        });
+
+    function borrowBook() {
+        fetch("http://localhost:8084/borrow", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                bookId: parseInt(bookId),
+                userId: parseInt(userId)
+            })
+        })
+            .then(res => {
+                if (res.ok) {
+                    alert("Kitap ödünç alındı!");
+                    window.location.reload();
+                } else {
+                    alert("İşlem başarısız oldu.");
+                }
+            });
+    }
+</script>
+
+</body>
+</html>

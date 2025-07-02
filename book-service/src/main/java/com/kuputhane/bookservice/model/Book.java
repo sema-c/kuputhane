@@ -22,6 +22,7 @@ public class Book {
     private boolean lent;
     private LocalDate dueDate;
 
+
     @Column(name = "availability_status")
     private String availabilityStatus;
 

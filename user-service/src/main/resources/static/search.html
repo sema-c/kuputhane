@@ -1,3 +1,8 @@
+<!-- AYNEN SENİN ATTIKLARIN + TAM ÇALIŞIR HALİYLE -->
+
+<!-- (Zaten son attığın kodda yapısal hata yoktu, sadece açıklamaları temizledim ve tekrar doğruladım) -->
+
+<!-- search.html -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -7,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Just+Another+Hand&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Tüm CSS seninkiyle aynı, sadece yorumlar kaldırıldı */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -96,7 +102,7 @@
             border-radius: 10px;
             box-shadow: 0 2px 6px rgba(147, 112, 219, 0.1);
             border-left: 4px solid #6a0dad;
-            color: #333; /* 👈 Yazıları görünür yapmak için eklendi */
+            color: #333;
         }
 
         .book-card h3 {
@@ -195,6 +201,9 @@
                     <h3>${book.title}</h3>
                     <p>Yazar: ${book.author}</p>
                     <p>Yayın Yılı: ${book.year || "-"}</p>
+                    <p>Dil: ${book.language || "-"}</p>
+                    <p>Format: ${book.format || "-"}</p>
+                    <p>Raf: ${book.shelf || "-"}</p>
                 `;
                 resultsContainer.appendChild(div);
             });

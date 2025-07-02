@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "com.kuputhane.book.protobuf";
+option java_package = "com.kuputhane.bookservice.proto";
 option java_outer_classname = "BookProto";
 
 message Book {

@@ -20,7 +20,7 @@
         <a href="#" class="active">Ana Sayfa</a>
         <a href="#">Kitaplar</a>
         <a href="login-register.html">Giriş</a>
-        <a href="#">İletişim</a>
+        <a href="https://linktr.ee/DyliaX">İletişim</a>
     </nav>
 </header>
 
@@ -62,30 +62,6 @@
                 console.error("Kitaplar alınamadı:", err);
                 document.getElementById("bookList").innerHTML = "<p>Kitaplar yüklenirken hata oluştu.</p>";
             });
-    }
-
-    function renderBooks(books) {
-        const container = document.getElementById("bookList");
-        container.innerHTML = "";
-
-        if (books.length === 0) {
-            container.innerHTML = "<p>Hiç kitap bulunamadı.</p>";
-            return;
-        }
-
-        books.forEach(book => {
-            const div = document.createElement("div");
-            div.className = "book-card";
-            div.innerHTML = `
-        <h3>${book.title}</h3>
-        <p>Yazar: ${book.author}</p>
-        <p>Yayın Yılı: ${book.year || book.publishedYear || "-"}</p>
-        <p class="${book.lent ? 'borrowed' : 'available'}">
-          Durum: ${book.lent ? "Ödünçte" : "Müsait"}
-        </p>
-      `;
-            container.appendChild(div);
-        });
     }
 
     function renderPagination() {
@@ -146,6 +122,37 @@
             });
         }
     });
+    function renderBooks(books) {
+        const container = document.getElementById("bookList");
+        container.innerHTML = "";
+
+        if (books.length === 0) {
+            container.innerHTML = "<p>Hiç kitap bulunamadı.</p>";
+            return;
+        }
+
+        books.forEach(book => {
+            const div = document.createElement("div");
+            div.className = "book-card";
+
+            // Tıklanabilir hale getiriyoruz
+            div.style.cursor = "pointer";
+            div.onclick = () => {
+                window.location.href = `../book/info.html?id=${book.id}`;
+            };
+
+            div.innerHTML = `
+            <h3>${book.title}</h3>
+            <p>Yazar: ${book.author}</p>
+            <p>Yayın Yılı: ${book.year || book.publishedYear || "-"}</p>
+            <p class="${book.lent ? 'borrowed' : 'available'}">
+                Durum: ${book.lent ? "Ödünçte" : "Müsait"}
+            </p>
+        `;
+            container.appendChild(div);
+        });
+    }
+
 </script>
 
 </body>
