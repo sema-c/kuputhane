@@ -3,11 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>Kitap Bilgisi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Just+Another+Hand&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --purple: #3b2f5c;
+            --gold: #e5c07b;
+            --bg-dark: #1e1e2f;
+            --bg-light: #f3f3f3;
+            --text-dark: #333;
+            --text-light: #fff;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             background: #f8f5fc;
-            padding: 30px;
+            padding: 0;
+            margin: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--purple);
+            padding: 10px 30px;
+            color: white;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: auto;
+        }
+
+        .logo-text {
+            font-family: 'Just Another Hand', cursive;
+            font-size: 2.2rem;
+            color: var(--gold);
+            margin-top: 5px;
         }
 
         .book-card {
@@ -15,7 +54,7 @@
             padding: 20px;
             border-radius: 15px;
             max-width: 600px;
-            margin: auto;
+            margin: 40px auto;
             box-shadow: 0 0 10px #c8b9f0;
         }
 
@@ -28,6 +67,18 @@
 
         .info {
             margin-top: 15px;
+        }
+
+        nav a {
+            color: white;
+            margin-left: 1.5rem;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover, nav .active {
+            color: var(--gold);
         }
 
         #borrowButton {
@@ -49,6 +100,18 @@
 </head>
 <body>
 
+<header>
+    <div class="logo-container" onclick="window.location.href='http://localhost:8081/'">
+        <img src="/img/logo.png" alt="Küpüthanem Logo" class="logo-img" />
+        <span class="logo-text">Küpüthanem</span>
+    </div>
+    <nav>
+        <a href="#" class="active">Ana Sayfa</a>
+        <a href="dashboard-librarian.html">Hesabım</a>
+        <a href="index.html">Çıkış</a>
+    </nav>
+</header>
+
 <div class="book-card">
     <img id="bookImage" class="book-cover" src="" alt="Kitap Kapak" onerror="this.src='/img/default.jpg'" />
     <div class="info">
@@ -69,7 +132,7 @@
 
     if (userRole === 'memur') {
         alert('Bu sayfaya erişim yetkiniz yok.');
-        window.location.href = '../user/index.html';
+        window.location.href = 'http://localhost:8081/user/index.html';
     }
 
     fetch(`http://localhost:8082/api/books/${bookId}`)
@@ -126,3 +189,4 @@
 
 </body>
 </html>
+
