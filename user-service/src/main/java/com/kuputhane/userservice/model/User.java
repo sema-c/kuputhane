@@ -18,6 +18,8 @@ public class User {
     private Long id;
 
     private String username;
+
+    @Column(name = "password_hash", nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)

@@ -1,19 +1,93 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Librarian Paneli</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Just+Another+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Just+Another+Hand&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        :root {
+            --purple: #5e05b4;
+            --gold: #f4c430;
+            --bg-dark: #1e1e2f;
+            --bg-light: #2c2c3e;
+            --white: #ffffff;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            background-color: var(--bg-dark);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        section {
+            background-color: var(--bg-light);
+            border: 1px solid var(--purple);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 0 12px rgba(0,0,0,0.4);
+            color: var(--white);
+        }
+
+        section h2 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 0.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        button, input {
+            padding: 0.5rem 1rem;
+            margin-top: 0.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: var(--gold);
+            color: black;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #d4aa00;
+        }
+
+        input.form-input {
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            background-color: var(--bg-dark);
+            color: var(--gold);
+            text-align: center;
+            padding: 1rem;
+        }
+    </style>
 </head>
 <body>
 
 <header>
     <div class="logo-container">
-        <img src="/img/logo.png" class="logo-img">
+        <img src="/img/logo.png" class="logo-img" />
         <span class="logo-text">Küpüthanem</span>
     </div>
-
     <nav>
         <a href="index.html">Ana Sayfa</a>
         <a href="#" class="active">Librarian</a>
@@ -21,21 +95,49 @@
     </nav>
 </header>
 
-<main style="padding: 2rem; color: white;">
-    <h1>📚 Librarian Paneli</h1>
+<main>
+    <section>
+        <h2>👤 Kullanıcı Bilgileri</h2>
+        <p>Ad Soyad: <strong>Sema Çiftçi</strong></p>
+        <p>Email: <strong>semaciftci828@gmail.com</strong></p>
+        <p>Rol: <strong>LIBRARIAN</strong></p>
+    </section>
 
     <section>
-        <h2>Geciken Kitaplar</h2>
+        <h2>⌛ Geciken Kitaplar</h2>
         <button onclick="loadLateBooks()">Yenile</button>
         <ul id="lateBooks"></ul>
     </section>
 
-    <hr>
+    <section>
+        <h2>📖 Kitap Ödünç Ver</h2>
+        <input type="number" id="bookId" placeholder="Kitap ID" class="form-input" />
+        <button onclick="lendBook()">Ödünç Ver</button>
+    </section>
 
     <section>
-        <h2>Kitap Ödünç Ver</h2>
-        <input type="number" id="bookId" placeholder="Kitap ID" class="form-input">
-        <button onclick="lendBook()">Ödünç Ver</button>
+        <h2>➕ Yeni Kitap Ekle</h2>
+        <input type="text" id="newBookTitle" placeholder="Kitap Adı" class="form-input" />
+        <input type="text" id="newBookAuthor" placeholder="Yazar" class="form-input" />
+        <button onclick="addNewBook()">Ekle</button>
+    </section>
+
+    <section>
+        <h2>📊 İstatistikler</h2>
+        <ul>
+            <li>Toplam Kitap: <strong>1520</strong></li>
+            <li>Aktif Kullanıcı: <strong>430</strong></li>
+            <li>Geciken Kitap: <strong>14</strong></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>🔔 Bildirimler</h2>
+        <ul>
+            <li>"Yüzüklerin Efendisi" ödünç verildi.</li>
+            <li>"1984" kitabı geç teslim edildi.</li>
+            <li>Yeni kullanıcı eklendi: mehmetyilmaz@ornek.com</li>
+        </ul>
     </section>
 </main>
 
@@ -71,9 +173,7 @@
         const daysLate = prompt("Kaç gün gecikti?");
         fetch(`http://localhost:8083/api/payments/penalty/apply/${bookId}?daysLate=${daysLate}`, {
             method: "POST",
-            headers: {
-                "Role": "LIBRARIAN"
-            }
+            headers: { "Role": "LIBRARIAN" }
         })
             .then(res => res.text())
             .then(msg => alert(msg));
@@ -85,6 +185,19 @@
             .then(res => res.text())
             .then(msg => alert(msg));
     }
+
+    function addNewBook() {
+        const title = document.getElementById("newBookTitle").value;
+        const author = document.getElementById("newBookAuthor").value;
+        fetch("http://localhost:8082/api/books", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, author })
+        })
+            .then(res => res.text())
+            .then(msg => alert("Yeni kitap eklendi: " + msg));
+    }
 </script>
+
 </body>
 </html>
