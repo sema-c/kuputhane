@@ -103,6 +103,13 @@
             font-size: 0.9rem;
             user-select: none;
         }
+        .carousel-caption h5 {
+            font-family: 'Just Another Hand', cursive;
+            font-size: 2rem;
+            color: #f4f1de;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -120,12 +127,10 @@
 </header>
 
 <main>
-    <!-- Carousel Başlangıcı -->
     <div id="libraryCarousel" class="carousel slide my-4" data-bs-ride="carousel" style="max-width:900px; margin:40px auto; border-radius:10px; box-shadow: 0 0 15px rgba(59,47,92,0.2);">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#libraryCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Kitaplar"></button>
             <button type="button" data-bs-target="#libraryCarousel" data-bs-slide-to="1" aria-label="Okuma"></button>
-            <button type="button" data-bs-target="#libraryCarousel" data-bs-slide-to="2" aria-label="Etkinlikler"></button>
         </div>
 
         <div class="carousel-inner" style="border-radius:10px; overflow:hidden;">
@@ -145,13 +150,6 @@
                 </div>
             </div>
 
-            <div class="carousel-item">
-                <img src="/img/k3.png" class="d-block w-100" alt="Kütüphane Etkinlikleri">
-                <div class="carousel-caption d-none d-md-block" style="background: rgba(59, 47, 92, 0.7); border-radius: 10px;">
-                    <h5>🎉 Etkinlikler ve Atölyeler</h5>
-                    <p>Okuma grupları, yazar buluşmaları ve daha fazlası.</p>
-                </div>
-            </div>
         </div>
 
         <button class="carousel-control-prev" type="button" data-bs-target="#libraryCarousel" data-bs-slide="prev">
@@ -164,9 +162,7 @@
             <span class="visually-hidden">Sonraki</span>
         </button>
     </div>
-    <!-- Carousel Bitişi -->
 
-    <!-- Hakkımızda bölümü -->
     <section class="hakkimizda" id="hakkimizda">
         <h2>Hakkımızda</h2>
         <hr />
@@ -196,7 +192,6 @@
     <p>İletişim: kutuphane@ornek.com | Tel: (0312) 000 00 00</p>
 </footer>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

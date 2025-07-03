@@ -9,6 +9,6 @@ public class RoleHierarchyBuilder {
         RoleNode admin = new RoleNode("ADMIN");
         admin.addChild(librarian);
 
-        return admin; // root
+        return admin;
     }
 }
