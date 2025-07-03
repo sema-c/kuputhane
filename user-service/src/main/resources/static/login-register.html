@@ -4,21 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Giriş / Kayıt</title>
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Just+Another+Hand&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <header>
   <div class="logo-container">
-    <img src="/img/logo.png" class="logo-img">
+    <img src="/img/logo.png" class="logo-img" />
     <span class="logo-text">Küpüthanem</span>
   </div>
 
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Just+Another+Hand&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
   <nav>
-    <a href="index.html">Ana Sayfa</a>
+    <a href="index-old.html">Ana Sayfa</a>
     <a href="#">Kitaplar</a>
     <a href="#" class="active">Giriş</a>
     <a href="#">İletişim</a>
@@ -30,8 +28,6 @@
     <h2 style="text-align: center; color: var(--gold); margin-bottom: 1.5rem;" id="form-title">Giriş Yap</h2>
 
     <form id="auth-form" style="display: flex; flex-direction: column; gap: 1rem;">
-
-      <!-- ... önceki kodlar değişmedi -->
 
       <div id="register-fields" style="display: none; flex-direction: column; gap: 1rem;">
         <input type="text" id="firstName" placeholder="Ad" class="form-input" />
@@ -45,7 +41,6 @@
         </select>
       </div>
 
-
       <input type="text" id="username" placeholder="Kullanıcı Adı" class="form-input" required />
       <input type="password" id="password" placeholder="Şifre" class="form-input" required />
 
@@ -57,7 +52,7 @@
       <button id="toggle-button" style="background: none; border: none; color: var(--gold); text-decoration: underline; cursor: pointer;">Kayıt Ol</button>
     </p>
 
-    <p id="auth-message" style="text-align: center; margin-top: 1rem; font-weight: bold;"></p>
+    <p id="auth-message" style="text-align: center; margin-top: 1rem; font-weight: bold; color: #f4c430;"></p>
   </div>
 </main>
 
@@ -66,7 +61,102 @@
   <p>İletişim: kutuphane@ornek.com | Tel: (0312) 000 00 00</p>
 </footer>
 
-<script src="/script.js"></script>
+<script>
+  const form = document.getElementById("auth-form");
+  const toggleBtn = document.getElementById("toggle-button");
+  const toggleText = document.getElementById("toggle-text");
+  const formTitle = document.getElementById("form-title");
+  const registerFields = document.getElementById("register-fields");
+  const authMessage = document.getElementById("auth-message");
+
+  let isRegister = false;
+
+  toggleBtn.addEventListener("click", () => {
+    isRegister = !isRegister;
+    registerFields.style.display = isRegister ? "flex" : "none";
+    formTitle.textContent = isRegister ? "Kayıt Ol" : "Giriş Yap";
+    toggleText.textContent = isRegister ? "Zaten hesabınız var mı?" : "Hesabınız yok mu?";
+    toggleBtn.textContent = isRegister ? "Giriş Yap" : "Kayıt Ol";
+    authMessage.textContent = "";
+  });
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    authMessage.textContent = "";
+
+    if (isRegister) {
+      const data = {
+        username: document.getElementById("username").value.trim(),
+        password: document.getElementById("password").value,
+        firstName: document.getElementById("firstName").value.trim(),
+        lastName: document.getElementById("lastName").value.trim(),
+        phoneNumber: document.getElementById("phoneNumber").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        role: document.getElementById("role").value
+      };
+
+      if (!data.username || !data.password || !data.firstName || !data.lastName || !data.email) {
+        authMessage.textContent = "Lütfen tüm zorunlu alanları doldurun.";
+        return;
+      }
+
+      fetch("http://localhost:8081/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+              .then(async res => {
+                if (res.ok) {
+                  const result = await res.json();
+                  authMessage.textContent = "Kayıt başarılı! Şimdi giriş yapabilirsiniz.";
+                  isRegister = false;
+                  registerFields.style.display = "none";
+                  formTitle.textContent = "Giriş Yap";
+                  toggleText.textContent = "Hesabınız yok mu?";
+                  toggleBtn.textContent = "Kayıt Ol";
+                  form.reset();
+                } else {
+                  const error = await res.text();
+                  throw new Error(error);
+                }
+              })
+              .catch(err => {
+                authMessage.textContent = "Kayıt başarısız: " + err.message;
+              });
+
+    } else {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      fetch("http://localhost:8081/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      })
+              .then(async res => {
+                if (!res.ok) {
+                  const error = await res.text();
+                  throw new Error(error || "Giriş başarısız");
+                }
+                return res.json();
+              })
+              .then(user => {
+                localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+                if(user.role === "LIBRARIAN") {
+                  window.location.href = "dashboard-librarian.html";
+                } else if(user.role === "USER") {
+                  window.location.href = "dashboard-user.html";
+                } else {
+                  alert("Tanımlı olmayan rol: " + user.role);
+                }
+              })
+              .catch(err => {
+                authMessage.textContent = "Giriş başarısız: " + err.message;
+              });
+    }
+  });
+</script>
 
 </body>
 </html>

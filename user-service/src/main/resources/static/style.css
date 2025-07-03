@@ -37,7 +37,7 @@ header {
 .logo-text {
     font-family: 'Just Another Hand', cursive;
     font-size: 2.2rem;
-    color: #FFD700; /* altın sarısı */
+    color: #FFD700;
     margin-top: 10px;
 }
 
@@ -137,7 +137,6 @@ footer {
     font-size: 0.9rem;
 }
 
-/* responsive */
 @media (max-width: 768px) {
     .book-container {
         flex-direction: column;

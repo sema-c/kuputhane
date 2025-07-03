@@ -12,4 +12,3 @@ public class RoleHierarchyBuilder {
         return admin; // root
     }
 }
-

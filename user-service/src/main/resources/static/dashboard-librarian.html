@@ -89,7 +89,7 @@
         <span class="logo-text">Küpüthanem</span>
     </div>
     <nav>
-        <a href="index.html">Ana Sayfa</a>
+        <a href="index-old.html">Ana Sayfa</a>
         <a href="#" class="active">Librarian</a>
         <a href="#" onclick="logout()">Çıkış</a>
     </nav>
@@ -98,10 +98,11 @@
 <main>
     <section>
         <h2>👤 Kullanıcı Bilgileri</h2>
-        <p>Ad Soyad: <strong>Sema Çiftçi</strong></p>
-        <p>Email: <strong>semaciftci828@gmail.com</strong></p>
-        <p>Rol: <strong>LIBRARIAN</strong></p>
+        <p>Ad Soyad: <strong id="userFullName">-</strong></p>
+        <p>Email: <strong id="userEmail">-</strong></p>
+        <p>Rol: <strong id="userRole">-</strong></p>
     </section>
+
 
     <section>
         <h2>⌛ Geciken Kitaplar</h2>
@@ -148,6 +149,7 @@
 
 <script>
     function logout() {
+        localStorage.removeItem("loggedInUser");
         window.location.href = "login-register.html";
     }
 
@@ -197,6 +199,25 @@
             .then(res => res.text())
             .then(msg => alert("Yeni kitap eklendi: " + msg));
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const userJson = localStorage.getItem("loggedInUser");
+        if (!userJson) {
+            alert("Giriş yapılmamış, lütfen giriş yapınız.");
+            window.location.href = "login-register.html";
+            return;
+        }
+
+        const user = JSON.parse(userJson);
+
+        document.getElementById("userFullName").textContent =
+            (user.firstName && user.lastName)
+                ? `${user.firstName} ${user.lastName}`
+                : user.username;
+
+        document.getElementById("userEmail").textContent = user.email || "-";
+        document.getElementById("userRole").textContent = user.role || "-";
+    });
 </script>
 
 </body>

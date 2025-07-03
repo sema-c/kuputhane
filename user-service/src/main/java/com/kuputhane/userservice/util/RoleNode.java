@@ -24,4 +24,3 @@ public class RoleNode {
         return children;
     }
 }
-
