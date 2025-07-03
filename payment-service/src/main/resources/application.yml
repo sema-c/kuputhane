@@ -7,6 +7,16 @@ spring:
     username: postgres
     password: ssema.7.
     driver-class-name: org.postgresql.Driver
+    spring:
+      mvc:
+        content negotiation:
+          favor-path-extension: false
+          favor-parameter: false
+          ignore-accept-header: false
+          media-types:
+            json: application/json
+            protobuf: application/x-protobuf
+        default-content-type: application/json
 
   jpa:
     hibernate:

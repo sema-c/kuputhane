@@ -1,4 +1,5 @@
 package com.kuputhane.bookservice.model;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,6 +9,8 @@ import java.time.LocalDate;
 @Table(name = "books")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book {
 
     @Id
@@ -17,11 +20,13 @@ public class Book {
     private String title;
     private String author;
     private int year;
+
     private String isbn;
     private String location;
-    private boolean lent;
-    private LocalDate dueDate;
 
+    private boolean available;
+
+    private LocalDate dueDate;
 
     @Column(name = "availability_status")
     private String availabilityStatus;
@@ -37,8 +42,9 @@ public class Book {
 
     @Column(name = "image_url")
     private String imageUrl;
-
+    
     public Boolean getAvailable() {
-        return null;
+        return !this.available;
     }
+
 }

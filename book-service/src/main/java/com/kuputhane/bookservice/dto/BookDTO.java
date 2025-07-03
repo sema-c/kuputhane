@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookDTO {
+
     private Long id;
     private String title;
     private String author;
@@ -18,11 +19,12 @@ public class BookDTO {
     private String publisherName;
     private Boolean available;
 
-    public BookDTO(Long id, String title, String author, int year) {
+    public BookDTO(Long id, String title, String author, Integer year, Boolean available) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.year = year;
+        this.available = available;
     }
 
 }

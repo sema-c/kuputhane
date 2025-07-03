@@ -12,7 +12,7 @@
 
 <header>
     <div class="logo-container">
-        <img src="/img/logo.png" class="logo-img" alt="" />
+        <img src="/img/logo.png" class="logo-img" alt="Logo" />
         <span class="logo-text">Küpüthanem</span>
     </div>
 
@@ -20,13 +20,12 @@
         <a href="#" class="active">Ana Sayfa</a>
         <a href="#">Kitaplar</a>
         <a href="login-register.html">Giriş</a>
-        <a href="https://linktr.ee/DyliaX">İletişim</a>
+        <a href="homepage.html">Çıkış</a>
     </nav>
 </header>
 
 <main>
     <section class="search-section">
-        <label for="searchInput"></label>
         <input type="text" id="searchInput" placeholder="Kitap ara..." />
         <button id="searchBtn"><i class="fas fa-search"></i></button>
     </section>
@@ -62,6 +61,35 @@
                 console.error("Kitaplar alınamadı:", err);
                 document.getElementById("bookList").innerHTML = "<p>Kitaplar yüklenirken hata oluştu.</p>";
             });
+    }
+
+    function renderBooks(books) {
+        const container = document.getElementById("bookList");
+        container.innerHTML = "";
+
+        if (books.length === 0) {
+            container.innerHTML = "<p>Hiç kitap bulunamadı.</p>";
+            return;
+        }
+
+        books.forEach(({author, id, available, publishedYear, title, year}) => {
+            const div = document.createElement("div");
+            div.className = "book-card";
+
+            div.style.cursor = "pointer";
+            div.onclick = () => {
+                window.location.href = "http://localhost:8082/info.html?id=" + id;
+            };
+
+            // language=HTML
+            div.innerHTML = `
+                <h3>${title}</h3>
+                <p>Yazar: ${author}</p>
+                <p>Yayın Yılı: ${year || publishedYear || "-"}</p>
+                <p class="${available ? 'available' : 'borrowed'}"> Durum: ${available ? "Müsait" : "Ödünçte"} </p>
+            `;
+            container.appendChild(div);
+        });
     }
 
     function renderPagination() {
@@ -122,36 +150,6 @@
             });
         }
     });
-    function renderBooks(books) {
-        const container = document.getElementById("bookList");
-        container.innerHTML = "";
-
-        if (books.length === 0) {
-            container.innerHTML = "<p>Hiç kitap bulunamadı.</p>";
-            return;
-        }
-
-        books.forEach(book => {
-            const div = document.createElement("div");
-            div.className = "book-card";
-
-            div.style.cursor = "pointer";
-            div.onclick = () => {
-                window.location.href = "http://localhost:8082/info.html?id=" + book.id;
-            };
-
-            div.innerHTML = `
-            <h3>${book.title}</h3>
-            <p>Yazar: ${book.author}</p>
-            <p>Yayın Yılı: ${book.year || book.publishedYear || "-"}</p>
-            <p class="${book.lent ? 'borrowed' : 'available'}">
-                Durum: ${book.lent ? "Ödünçte" : "Müsait"}
-            </p>
-        `;
-            container.appendChild(div);
-        });
-    }
-
 </script>
 
 </body>

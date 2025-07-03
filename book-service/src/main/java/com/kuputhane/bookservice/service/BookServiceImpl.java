@@ -55,7 +55,7 @@ public class BookServiceImpl implements BookService {
         if (opt.isEmpty()) return ResponseEntity.badRequest().body("Kitap bulunamadı");
 
         Book book = opt.get();
-        book.setLent(true);
+        book.setAvailable(true);
         book.setDueDate(LocalDate.now().plusDays(14)); // 2 hafta ödünç
         bookRepository.save(book);
 
@@ -68,7 +68,7 @@ public class BookServiceImpl implements BookService {
         if (opt.isEmpty()) return ResponseEntity.badRequest().body("Kitap bulunamadı");
 
         Book book = opt.get();
-        book.setLent(false);
+        book.setAvailable(false);
         book.setDueDate(null);
         bookRepository.save(book);
 

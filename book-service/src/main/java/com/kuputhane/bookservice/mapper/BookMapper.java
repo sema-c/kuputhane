@@ -10,7 +10,8 @@ public class BookMapper {
                 book.getId(),
                 book.getTitle(),
                 book.getAuthor(),
-                book.getYear()
+                book.getYear(),
+                book.getAvailable()
         );
     }
 
@@ -26,4 +27,3 @@ public class BookMapper {
         return dto;
     }
 }
-

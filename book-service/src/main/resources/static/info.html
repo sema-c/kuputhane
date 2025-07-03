@@ -107,7 +107,8 @@
             body: JSON.stringify({
                 bookId: parseInt(bookId),
                 userId: parseInt(userId)
-            })
+            }),
+            credentials: "include"
         })
             .then(res => {
                 if (res.ok) {
