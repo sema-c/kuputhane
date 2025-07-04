@@ -3,11 +3,8 @@ package com.kuputhane.userservice.controller;
 import com.kuputhane.userservice.dto.LoginRequest;
 import com.kuputhane.userservice.dto.RegisterRequest;
 import com.kuputhane.userservice.dto.RegisterResponse;
-import com.kuputhane.userservice.model.Role;
 import com.kuputhane.userservice.model.User;
-import com.kuputhane.userservice.repository.UserRepository;
 import com.kuputhane.userservice.service.UserService;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +14,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+class AuthController {
 
     private final UserService service;
 
