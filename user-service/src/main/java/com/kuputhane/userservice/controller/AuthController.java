@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin
 public class AuthController {
 
     private final UserService service;

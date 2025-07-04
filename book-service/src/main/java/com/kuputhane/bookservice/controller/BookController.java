@@ -16,7 +16,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/books")
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "*")
 public class BookController {
 
     private final BookRepository bookRepository;

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/borrow")
-@CrossOrigin(origins = "http://localhost:8082") // frontend için açık
+@CrossOrigin(origins = "*")
 public class BorrowController {
 
     private final BorrowService borrowService;
