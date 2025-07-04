@@ -90,7 +90,7 @@
     </div>
     <nav>
         <a href="index-old.html">Ana Sayfa</a>
-        <a href="#" class="active">Hesabım</a>
+        <a href="#" onclick="goToDashboard()">Hesabım</a>
         <a href="#" onclick="logout()">Çıkış</a>
     </nav>
 </header>
@@ -218,6 +218,22 @@
         document.getElementById("userEmail").textContent = user.email || "-";
         document.getElementById("userRole").textContent = user.role || "-";
     });
+
+    function goToDashboard() {
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (!user || !user.role) {
+            window.location.href = "login-register.html";
+            return;
+        }
+
+        if (user.role === "LIBRARIAN") {
+            window.location.href = "dashboard-librarian.html";
+        } else if (user.role === "USER") {
+            window.location.href = "dashboard-user.html";
+        } else {
+            alert("Geçersiz rol: " + user.role);
+        }
+    }
 </script>
 
 </body>

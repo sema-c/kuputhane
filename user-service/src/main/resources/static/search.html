@@ -120,7 +120,7 @@
     </div>
     <nav>
         <a href="#" class="active">Ana Sayfa</a>
-        <a href="dashboard-librarian.html">Hesabım</a>
+        <a href="#" onclick="goToDashboard()">Hesabım</a>
         <a href="index.html">Çıkış</a>
     </nav>
 </header>
@@ -229,6 +229,22 @@
             displayBooks(filtered);
         }));
     });
+
+    function goToDashboard() {
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (!user || !user.role) {
+            window.location.href = "login-register.html";
+            return;
+        }
+
+        if (user.role === "LIBRARIAN") {
+            window.location.href = "dashboard-librarian.html";
+        } else if (user.role === "USER") {
+            window.location.href = "dashboard-user.html";
+        } else {
+            alert("Geçersiz rol: " + user.role);
+        }
+    }
 </script>
 
 </body>
