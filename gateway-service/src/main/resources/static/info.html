@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Kitap Bilgisi</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Just+Another+Hand&display=swap" rel="stylesheet">
     <style>
@@ -17,7 +17,6 @@
         body {
             font-family: 'Roboto', sans-serif;
             background: #f8f5fc;
-            padding: 0;
             margin: 0;
         }
 
@@ -39,14 +38,12 @@
 
         .logo-img {
             width: 50px;
-            height: auto;
         }
 
         .logo-text {
             font-family: 'Just Another Hand', cursive;
             font-size: 2.2rem;
             color: var(--gold);
-            margin-top: 5px;
         }
 
         .book-card {
@@ -101,7 +98,7 @@
 <body>
 
 <header>
-    <div class="logo-container" onclick="window.location.href='http://localhost:8081/index.html'">
+    <div class="logo-container" onclick="window.location.href='index.html'">
         <img src="/img/logo.png" alt="Küpüthanem Logo" class="logo-img" />
         <span class="logo-text">Küpüthanem</span>
     </div>
@@ -127,8 +124,16 @@
 <script>
     const params = new URLSearchParams(window.location.search);
     const bookId = params.get('id');
-    const userRole = sessionStorage.getItem('userRole');
-    const userId = sessionStorage.getItem('userId');
+
+    // ✅ Login olmuş kullanıcıyı localStorage’dan al ve session’a yaz (eğer yazılmamışsa)
+    const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (storedUser && storedUser.id && !sessionStorage.getItem("userId")) {
+        sessionStorage.setItem("userId", storedUser.id);
+        sessionStorage.setItem("userRole", storedUser.role);
+    }
+
+    const userRole = sessionStorage.getItem("userRole");
+    const userId = sessionStorage.getItem("userId");
 
     if (userRole === 'memur') {
         alert('Bu sayfaya erişim yetkiniz yok.');
@@ -136,12 +141,7 @@
     }
 
     fetch(`http://localhost:8082/api/books/${bookId}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Kitap bulunamadı');
-            }
-            return response.json();
-        })
+        .then(res => res.json())
         .then(data => {
             document.getElementById('bookImage').src = `/img/${bookId}.jpg`;
             document.getElementById('title').textContent = data.title || 'Bilinmiyor';
@@ -150,18 +150,20 @@
             document.getElementById('publisher').textContent = data.publisherName || data.publisherId || 'Bilinmiyor';
             document.getElementById('status').textContent = data.available ? 'Mevcut' : 'Ödünçte';
 
-            const borrowButton = document.getElementById('borrowButton');
+            const btn = document.getElementById('borrowButton');
             if (!data.available) {
-                borrowButton.disabled = true;
-                borrowButton.textContent = "Mevcut Değil";
+                btn.disabled = true;
+                btn.textContent = "Mevcut Değil";
             }
-        })
-        .catch(error => {
-            console.error('Hata:', error);
-            alert("Kitap bilgisi alınamadı.");
         });
 
     function borrowBook() {
+        if (!userId || isNaN(userId)) {
+            alert("Kullanıcı bilgisi alınamadı. Lütfen tekrar giriş yapın.");
+            window.location.href = "login-register.html";
+            return;
+        }
+
         fetch("http://localhost:8084/borrow", {
             method: "POST",
             headers: {
@@ -170,21 +172,21 @@
             body: JSON.stringify({
                 bookId: parseInt(bookId),
                 userId: parseInt(userId)
-            }),
-            credentials: "include"
+            })
         })
             .then(res => {
                 if (res.ok) {
                     alert("Kitap ödünç alındı!");
                     window.location.reload();
                 } else {
-                    alert("İşlem başarısız oldu.");
+                    alert("İşlem başarısız.");
                 }
             })
             .catch(() => {
                 alert("Sunucuya ulaşılamadı.");
             });
     }
+
     function goToDashboard() {
         const user = JSON.parse(localStorage.getItem("loggedInUser"));
         if (!user || !user.role) {

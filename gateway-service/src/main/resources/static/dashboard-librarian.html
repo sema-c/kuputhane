@@ -103,7 +103,6 @@
         <p>Rol: <strong id="userRole">-</strong></p>
     </section>
 
-
     <section>
         <h2>⌛ Geciken Kitaplar</h2>
         <button onclick="loadLateBooks()">Yenile</button>
@@ -148,13 +147,8 @@
 </footer>
 
 <script>
-    function logout() {
-        localStorage.removeItem("loggedInUser");
-        window.location.href = "login-register.html";
-    }
-
     function loadLateBooks() {
-        fetch("http://localhost:8082/api/books/late")
+        fetch("http://localhost:8085/api/books/late")
             .then(res => res.json())
             .then(data => {
                 const list = document.getElementById("lateBooks");
@@ -173,7 +167,7 @@
 
     function applyPenalty(bookId) {
         const daysLate = prompt("Kaç gün gecikti?");
-        fetch(`http://localhost:8083/api/payments/penalty/apply/${bookId}?daysLate=${daysLate}`, {
+        fetch(`http://localhost:8085/api/payments/penalty/apply/${bookId}?daysLate=${daysLate}`, {
             method: "POST",
             headers: { "Role": "LIBRARIAN" }
         })
@@ -183,7 +177,7 @@
 
     function lendBook() {
         const id = document.getElementById("bookId").value;
-        fetch(`http://localhost:8082/api/books/lend/${id}`, { method: "POST" })
+        fetch(`http://localhost:8085/api/books/lend/${id}`, { method: "POST" })
             .then(res => res.text())
             .then(msg => alert(msg));
     }
@@ -191,13 +185,34 @@
     function addNewBook() {
         const title = document.getElementById("newBookTitle").value;
         const author = document.getElementById("newBookAuthor").value;
-        fetch("http://localhost:8082/api/books", {
+        fetch("http://localhost:8085/api/books", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ title, author })
         })
             .then(res => res.text())
             .then(msg => alert("Yeni kitap eklendi: " + msg));
+    }
+
+    function logout() {
+        localStorage.removeItem("loggedInUser");
+        window.location.href = "login-register.html";
+    }
+
+    function goToDashboard() {
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (!user || !user.role) {
+            window.location.href = "login-register.html";
+            return;
+        }
+
+        if (user.role === "LIBRARIAN") {
+            window.location.href = "dashboard-librarian.html";
+        } else if (user.role === "USER") {
+            window.location.href = "dashboard-user.html";
+        } else {
+            alert("Geçersiz rol: " + user.role);
+        }
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -218,24 +233,7 @@
         document.getElementById("userEmail").textContent = user.email || "-";
         document.getElementById("userRole").textContent = user.role || "-";
     });
-
-    function goToDashboard() {
-        const user = JSON.parse(localStorage.getItem("loggedInUser"));
-        if (!user || !user.role) {
-            window.location.href = "login-register.html";
-            return;
-        }
-
-        if (user.role === "LIBRARIAN") {
-            window.location.href = "dashboard-librarian.html";
-        } else if (user.role === "USER") {
-            window.location.href = "dashboard-user.html";
-        } else {
-            alert("Geçersiz rol: " + user.role);
-        }
-    }
 </script>
 
 </body>
 </html>
-
