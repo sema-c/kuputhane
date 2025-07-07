@@ -2,13 +2,15 @@ package com.kuputhane.permissionservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Permission {
+public class AccessPermission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +22,10 @@ public class Permission {
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
-    private Permission parent;
+    private AccessPermission parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    private List<AccessPermission> children = new ArrayList<>();
 
     @Column(name = "role_id")
     private Integer roleId;

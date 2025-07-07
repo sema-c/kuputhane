@@ -1,11 +1,11 @@
 package com.kuputhane.permissionservice.repository;
 
-import com.kuputhane.permissionservice.model.Permission;
+import com.kuputhane.permissionservice.model.AccessPermission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
-public interface PermissionRepository extends JpaRepository<Permission, Long> {
+public interface PermissionRepository extends JpaRepository<AccessPermission, Long> {
 
-    List<Permission> findByRoleId(Integer roleId);
-    List<Permission> findByParent(Permission parent);
+    List<AccessPermission> findByRoleId(Integer roleId);
+    List<AccessPermission> findByParent(AccessPermission parent);
 }

@@ -2,6 +2,9 @@ package com.kuputhane.userservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.kuputhane.permissionservice.model.AccessPermission;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -9,8 +12,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "users")
-@Getter
-@Setter
 public class User {
 
     @Id
