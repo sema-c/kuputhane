@@ -2,42 +2,47 @@ server:
   port: 8085
 
 spring:
+  main:
+    web-application-type: reactive
+
   application:
     name: gateway-service
 
   cloud:
     gateway:
-      routes:
-        - id: user-service
-          uri: http://localhost:8081
-          predicates:
-            - Path=/api/auth/**, /api/users/**, /api/contact/**
+      server:
+        webflux:
+          routes:
+            - id: user-service
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/auth/**, /api/users/**, /api/contact/**
 
-        - id: book-service
-          uri: http://localhost:8082
-          predicates:
-            - Path=/api/books/**, /api/categories/**, /api/publishers/**
+            - id: book-service
+              uri: http://localhost:8082
+              predicates:
+                - Path=/api/books/**, /api/categories/**, /api/publishers/**
 
-        - id: payment-service
-          uri: http://localhost:8083
-          predicates:
-            - Path=/api/borrow/**, /api/punishment/**
+            - id: payment-service
+              uri: http://localhost:8083
+              predicates:
+                - Path=/api/borrow/**, /api/punishment/**
 
-        - id: permission-service
-          uri: http://localhost:8084
-          predicates:
-            - Path=/api/permissions/**, /api/roles/**
+            - id: permission-service
+              uri: http://localhost:8084
+              predicates:
+                - Path=/api/permissions/**, /api/roles/**
 
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins: "*"
-            allowedMethods: "*"
-            allowedHeaders: "*"
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origins: "*"
+                allowed-methods: "*"
+                allowed-headers: "*"
 
 eureka:
   client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka

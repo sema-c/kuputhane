@@ -19,7 +19,7 @@
     <nav>
         <a href="#" class="active">Ana Sayfa</a>
         <a href="#" onclick="goToDashboard()">Hesabım</a>
-        <a href="http://localhost:8081/">Çıkış</a>
+        <a href="http://localhost:8085/">Çıkış</a>
     </nav>
 </header>
 
@@ -77,7 +77,7 @@
 
             div.style.cursor = "pointer";
             div.onclick = () => {
-                window.location.href = "http://localhost:8082/info.html?id=" + id;
+                window.location.href = `info.html?id=${id}`;
             };
 
             div.innerHTML = `

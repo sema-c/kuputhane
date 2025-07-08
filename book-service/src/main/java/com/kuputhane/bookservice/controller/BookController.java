@@ -8,6 +8,7 @@ import com.kuputhane.bookservice.model.Publisher;
 import com.kuputhane.bookservice.repository.BookRepository;
 import com.kuputhane.bookservice.repository.CategoryRepository;
 import com.kuputhane.bookservice.repository.PublisherRepository;
+import com.kuputhane.bookservice.service.BookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.*;
@@ -82,4 +83,19 @@ public class BookController {
         BookDTO dto = BookMapper.toDetailedDTO(book, categoryName, publisherName);
         return ResponseEntity.ok(dto);
     }
+
+    @PutMapping("/{id}/availability")
+    public ResponseEntity<String> updateAvailability(@PathVariable Long id, @RequestParam boolean available) {
+        BookService bookService = null;
+        Optional<Book> bookOptional = bookService.getById(id);
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            book.setAvailable(available);
+            bookService.save(book);
+            return ResponseEntity.ok("Durum güncellendi.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

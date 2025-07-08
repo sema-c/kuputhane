@@ -2,21 +2,14 @@ server:
   port: 8083
 
 spring:
+  application:
+    name: payment-service
+
   datasource:
     url: jdbc:postgresql://localhost:5432/kuputhane
     username: postgres
     password: ssema.7.
     driver-class-name: org.postgresql.Driver
-    spring:
-      mvc:
-        content negotiation:
-          favor-path-extension: false
-          favor-parameter: false
-          ignore-accept-header: false
-          media-types:
-            json: application/json
-            protobuf: application/x-protobuf
-        default-content-type: application/json
 
   jpa:
     hibernate:
@@ -26,12 +19,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  application:
-    name: payment-service
-
 eureka:
   client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka

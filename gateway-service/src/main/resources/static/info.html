@@ -125,7 +125,6 @@
     const params = new URLSearchParams(window.location.search);
     const bookId = params.get('id');
 
-    // ✅ Login olmuş kullanıcıyı localStorage’dan al ve session’a yaz (eğer yazılmamışsa)
     const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (storedUser && storedUser.id && !sessionStorage.getItem("userId")) {
         sessionStorage.setItem("userId", storedUser.id);
@@ -164,7 +163,7 @@
             return;
         }
 
-        fetch("http://localhost:8084/borrow", {
+        fetch("http://localhost:8085/api/borrow", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
