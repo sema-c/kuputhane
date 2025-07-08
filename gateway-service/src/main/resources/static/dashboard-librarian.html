@@ -1,3 +1,4 @@
+<!-- dashboard-librarian.html -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -13,88 +14,30 @@
             --bg-light: #2c2c3e;
             --white: #ffffff;
         }
-
-        main {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
-            background-color: #f4f1de;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        section {
-            background-color: var(--bg-light);
-            border: 1px solid var(--purple);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 0 12px rgba(0,0,0,0.4);
-            color: var(--white);
-        }
-
-        section h2 {
-            color: var(--gold);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 0.5rem;
-        }
-
-        li {
-            margin-bottom: 0.5rem;
-        }
-
-        button, input {
-            padding: 0.5rem 1rem;
-            margin-top: 0.5rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-        }
-
-        button {
-            background-color: var(--gold);
-            color: black;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #d4aa00;
-        }
-
-        input.form-input {
-            width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 0.5rem;
-        }
-
-        footer {
-            background-color: var(--bg-dark);
-            color: var(--gold);
-            text-align: center;
-            padding: 1rem;
-        }
+        main { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; padding: 2rem; background-color: #f4f1de; font-family: 'Roboto', sans-serif; }
+        section { background-color: var(--bg-light); border: 1px solid var(--purple); border-radius: 1rem; padding: 1.5rem; box-shadow: 0 0 12px rgba(0,0,0,0.4); color: var(--white); }
+        section h2 { color: var(--gold); margin-bottom: 1rem; font-size: 1.3rem; }
+        ul { list-style: none; padding: 0; margin-top: 0.5rem; }
+        li { margin-bottom: 0.5rem; }
+        button, input { padding: 0.5rem 1rem; margin-top: 0.5rem; border: none; border-radius: 0.5rem; font-size: 1rem; }
+        button { background-color: var(--gold); color: black; cursor: pointer; transition: background-color 0.3s ease; }
+        button:hover { background-color: #d4aa00; }
+        input.form-input { width: 100%; box-sizing: border-box; margin-bottom: 0.5rem; }
+        footer { background-color: var(--bg-dark); color: var(--gold); text-align: center; padding: 1rem; }
     </style>
 </head>
 <body>
-
 <header>
-    <div class="logo-container" style="cursor: pointer;" onclick="window.location.href='index.html'">
-        <img src="/img/logo.png" alt="Küpüthanem Logo" class="logo-img" />
+    <div class="logo-container" onclick="window.location.href='index.html'">
+        <img src="/img/logo.png" class="logo-img" />
         <span class="logo-text">Küpüthanem</span>
     </div>
     <nav>
         <a href="index-old.html">Ana Sayfa</a>
         <a href="#" onclick="goToDashboard()">Hesabım</a>
-        <a href="#" onclick="logout()">Çıkış</a>
+        <a href="login-register.html" onclick="logout()">Çıkış</a>
     </nav>
 </header>
-
 <main>
     <section>
         <h2>👤 Kullanıcı Bilgileri</h2>
@@ -102,138 +45,64 @@
         <p>Email: <strong id="userEmail">-</strong></p>
         <p>Rol: <strong id="userRole">-</strong></p>
     </section>
-
     <section>
         <h2>⌛ Geciken Kitaplar</h2>
         <button onclick="loadLateBooks()">Yenile</button>
         <ul id="lateBooks"></ul>
     </section>
-
-    <section>
+    <section id="permission-lend-book">
         <h2>📖 Kitap Ödünç Ver</h2>
         <input type="number" id="bookId" placeholder="Kitap ID" class="form-input" />
         <button onclick="lendBook()">Ödünç Ver</button>
     </section>
-
-    <section>
+    <section id="permission-add-book">
         <h2>➕ Yeni Kitap Ekle</h2>
         <input type="text" id="newBookTitle" placeholder="Kitap Adı" class="form-input" />
         <input type="text" id="newBookAuthor" placeholder="Yazar" class="form-input" />
         <button onclick="addNewBook()">Ekle</button>
     </section>
-
     <section>
         <h2>📊 İstatistikler</h2>
-        <ul>
-            <li>Toplam Kitap: <strong>1520</strong></li>
-            <li>Aktif Kullanıcı: <strong>430</strong></li>
-            <li>Geciken Kitap: <strong>14</strong></li>
-        </ul>
+        <ul><li>Toplam Kitap: <strong>1520</strong></li><li>Aktif Kullanıcı: <strong>430</strong></li><li>Geciken Kitap: <strong>14</strong></li></ul>
     </section>
-
     <section>
         <h2>🔔 Bildirimler</h2>
-        <ul>
-            <li>"Yüzüklerin Efendisi" ödünç verildi.</li>
-            <li>"1984" kitabı geç teslim edildi.</li>
-            <li>Yeni kullanıcı eklendi: mehmetyilmaz@ornek.com</li>
-        </ul>
+        <ul><li>Yükleniyor...</li></ul>
     </section>
 </main>
-
 <footer>
     <p>© 2025 Kütüphane Yönetim Sistemi</p>
-    <p>İletişim: kutuphane@ornek.com | Tel: (0312) 000 00 00</p>
 </footer>
-
 <script>
-    function loadLateBooks() {
-        fetch("http://localhost:8085/api/books/late")
-            .then(res => res.json())
-            .then(data => {
-                const list = document.getElementById("lateBooks");
-                list.innerHTML = "";
-                data.forEach(book => {
-                    const li = document.createElement("li");
-                    li.textContent = `${book.title} - Teslim Tarihi: ${book.dueDate}`;
-                    const btn = document.createElement("button");
-                    btn.textContent = "Ceza Ver";
-                    btn.onclick = () => applyPenalty(book.id);
-                    li.appendChild(btn);
-                    list.appendChild(li);
-                });
-            });
-    }
-
-    function applyPenalty(bookId) {
-        const daysLate = prompt("Kaç gün gecikti?");
-        fetch(`http://localhost:8085/api/payments/penalty/apply/${bookId}?daysLate=${daysLate}`, {
-            method: "POST",
-            headers: { "Role": "LIBRARIAN" }
-        })
-            .then(res => res.text())
-            .then(msg => alert(msg));
-    }
-
-    function lendBook() {
-        const id = document.getElementById("bookId").value;
-        fetch(`http://localhost:8085/api/books/lend/${id}`, { method: "POST" })
-            .then(res => res.text())
-            .then(msg => alert(msg));
-    }
-
-    function addNewBook() {
-        const title = document.getElementById("newBookTitle").value;
-        const author = document.getElementById("newBookAuthor").value;
-        fetch("http://localhost:8085/api/books", {
+    let userPermissionIds = [];
+    function checkPermission(permissionToCheckId, elementIdToShowOrHide) {
+        fetch(`http://localhost:8083/api/permissions/check/user?permissionId=${permissionToCheckId}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, author })
+            body: JSON.stringify(userPermissionIds)
         })
-            .then(res => res.text())
-            .then(msg => alert("Yeni kitap eklendi: " + msg));
-    }
-
-    function logout() {
-        localStorage.removeItem("loggedInUser");
-        window.location.href = "login-register.html";
-    }
-
-    function goToDashboard() {
-        const user = JSON.parse(localStorage.getItem("loggedInUser"));
-        if (!user || !user.role) {
-            window.location.href = "login-register.html";
-            return;
-        }
-
-        if (user.role === "LIBRARIAN") {
-            window.location.href = "dashboard-librarian.html";
-        } else if (user.role === "USER") {
-            window.location.href = "dashboard-user.html";
-        } else {
-            alert("Geçersiz rol: " + user.role);
-        }
+            .then(res => res.json())
+            .then(hasAccess => {
+                const el = document.getElementById(elementIdToShowOrHide);
+                if (!hasAccess && el) el.style.display = "none";
+            });
     }
 
     document.addEventListener("DOMContentLoaded", () => {
         const userJson = localStorage.getItem("loggedInUser");
-        if (!userJson) {
-            alert("Giriş yapılmamış, lütfen giriş yapınız.");
-            window.location.href = "login-register.html";
-            return;
-        }
-
         const user = JSON.parse(userJson);
+        document.getElementById("userFullName").textContent = `${user.firstName} ${user.lastName}`;
+        document.getElementById("userEmail").textContent = user.email;
+        document.getElementById("userRole").textContent = user.role;
 
-        document.getElementById("userFullName").textContent =
-            (user.firstName && user.lastName)
-                ? `${user.firstName} ${user.lastName}`
-                : user.username;
-
-        document.getElementById("userEmail").textContent = user.email || "-";
-        document.getElementById("userRole").textContent = user.role || "-";
+        fetch(`http://localhost:8081/api/users/${user.id}/permissions`)
+            .then(res => res.json())
+            .then(data => {
+                userPermissionIds = data;
+                checkPermission(5, "permission-add-book");
+                checkPermission(7, "permission-lend-book");
+            });
     });
 </script>
-
 </body>
 </html>

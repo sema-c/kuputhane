@@ -1,29 +1,40 @@
 package com.kuputhane.userservice.service;
 
+import com.kuputhane.permissionservice.model.AccessPermission;
 import com.kuputhane.userservice.dto.RegisterRequest;
 import com.kuputhane.userservice.model.Role;
 import com.kuputhane.userservice.model.User;
 import com.kuputhane.userservice.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository repo;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RestTemplate restTemplate;
 
-    public UserServiceImpl(UserRepository repo, PasswordEncoder passwordEncoder) {
-        this.repo = repo;
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           RestTemplate restTemplate) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.restTemplate = restTemplate;
     }
 
     @Override
     public User register(RegisterRequest request) {
-        if (repo.findByUsername(request.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             return null;
         }
 
@@ -33,7 +44,6 @@ public class UserServiceImpl implements UserService {
         user.setLastName(request.getLastName());
         user.setPhoneNumber(request.getPhoneNumber());
         user.setEmail(request.getEmail());
-
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         if ("LIBRARIAN".equalsIgnoreCase(request.getRole())) {
@@ -42,31 +52,49 @@ public class UserServiceImpl implements UserService {
             user.setRole(Role.USER);
         }
 
-        return repo.save(user);
+        return userRepository.save(user);
     }
 
     @Override
     public Optional<User> loginByUsername(String username, String rawPassword) {
-        return repo.findByUsername(username)
+        return userRepository.findByUsername(username)
                 .filter(user -> passwordEncoder.matches(rawPassword, user.getPassword()));
     }
 
     @Override
     public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 
     @Override
     public User updateUser(Long id, User user) {
-        return null;
+        user.setId(id);
+        return userRepository.save(user);
     }
 
     @Override
     public User getUserById(Long id) {
-        return null;
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Override
     public List<User> getAllUsers() {
-        return repo.findAll();
+        return userRepository.findAll();
+    }
+
+    @Override
+    public List<AccessPermission> getPermissionsByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Integer roleId = user.getRole().ordinal();
+
+        ResponseEntity<AccessPermission[]> response = restTemplate.getForEntity(
+                "http://localhost:8083/api/permissions/role/" + roleId,
+                AccessPermission[].class
+        );
+
+        return Arrays.asList(Objects.requireNonNull(response.getBody()));
     }
 }

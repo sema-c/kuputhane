@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @RestController
@@ -52,7 +53,6 @@ public class PermissionController {
         return ResponseEntity.ok(permissionService.getAllByRoleRecursive(roleId));
     }
 
-
     @GetMapping("/accessible/{permissionId}")
     public ResponseEntity<Set<AccessPermission>> getAccessible(@PathVariable Long permissionId) {
         return ResponseEntity.ok(permissionService.getAllAccessiblePermissions(permissionId));
@@ -62,4 +62,18 @@ public class PermissionController {
     public ResponseEntity<List<AccessPermission>> getTree() {
         return ResponseEntity.ok(permissionService.getPermissionTree());
     }
+
+    @PostMapping("/check/user")
+    public ResponseEntity<Boolean> checkAccessForUser(
+            @RequestBody Set<Long> userPermissionIds,
+            @RequestParam Long permissionId) {
+
+        for (Long permId : userPermissionIds) {
+            Set<AccessPermission> accessible = permissionService.getAllAccessiblePermissions(permId);
+            boolean has = accessible.stream().anyMatch(p -> Objects.equals(p.getId(), permissionId));
+            if (has) return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
+    }
+
 }

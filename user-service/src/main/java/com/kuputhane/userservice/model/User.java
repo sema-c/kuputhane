@@ -2,7 +2,6 @@ package com.kuputhane.userservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import com.kuputhane.permissionservice.model.AccessPermission;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,4 +29,10 @@ public class User {
     private String firstName;
     private String lastName;
     private String phoneNumber;
+
+    @ElementCollection
+    @CollectionTable(name = "user_permissions", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "permission_id")
+    private Set<Long> permissionIds = new HashSet<>();
+
 }

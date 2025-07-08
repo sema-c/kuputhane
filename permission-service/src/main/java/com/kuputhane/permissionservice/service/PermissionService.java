@@ -9,7 +9,7 @@ public interface PermissionService {
     List<AccessPermission> getAll();
     AccessPermission getById(Long id);
     AccessPermission save(AccessPermission permission);
-    void delete(Long id); // İzin sil
+    void delete(Long id);
 
     List<AccessPermission> getAllByRoleRecursive(Integer roleId);
     boolean hasAccess(Integer roleId, Long permissionId);

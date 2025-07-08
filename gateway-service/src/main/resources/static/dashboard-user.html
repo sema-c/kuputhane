@@ -122,7 +122,7 @@
 <body>
 
 <header>
-    <div class="logo-container" style="cursor: pointer;" onclick="window.location.href='index.html'">
+    <div class="logo-container" style="cursor: pointer;" onclick="window.location.href='http://localhost:8081/index.html'">
         <img src="/img/logo.png" alt="Küpüthanem Logo" class="logo-img" />
         <span class="logo-text">Küpüthanem</span>
     </div>
@@ -146,14 +146,21 @@
         <p>Rol: <strong id="userRole">-</strong></p>
     </section>
 
-    <section>
+    <section id="borrowed-section">
         <h2>📄 Ödünç Alınan Kitaplarım</h2>
         <ul id="borrowedBooks"></ul>
     </section>
 
-    <section>
+    <section id="due-section">
         <h2>📆 Teslim Tarihi Yakın Kitaplar</h2>
         <ul id="soonDueBooks"></ul>
+    </section>
+
+    <section id="permission-section">
+        <h2>🔑 Erişim İzinlerim</h2>
+        <ul id="userPermissions">
+            <li>Yükleniyor...</li>
+        </ul>
     </section>
 </main>
 
@@ -180,7 +187,7 @@
 
     function returnBook(bookId) {
         const userId = sessionStorage.getItem("userId");
-        fetch(`http://localhost:8085/api/payments/return`, {
+        fetch(`http://localhost:8084/return`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ bookId: parseInt(bookId), userId: parseInt(userId) })
@@ -190,6 +197,10 @@
                 alert(msg);
                 window.location.reload();
             });
+    }
+
+    function hasPermission(action, resource, permissions) {
+        return permissions.some(p => p.action === action && p.resource === resource);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -211,7 +222,7 @@
         document.getElementById("userEmail").textContent = user.email || "-";
         document.getElementById("userRole").textContent = user.role || "-";
 
-        fetch(`http://localhost:8085/api/payments/borrowed/${userId}`)
+        fetch(`http://localhost:8084/borrowed/${userId}`)
             .then(res => res.json())
             .then(data => {
                 const list = document.getElementById("borrowedBooks");
@@ -227,7 +238,7 @@
                 });
             });
 
-        fetch(`http://localhost:8085/api/payments/borrowed/soon-due/${userId}`)
+        fetch(`http://localhost:8084/borrowed/soon-due/${userId}`)
             .then(res => res.json())
             .then(data => {
                 const list = document.getElementById("soonDueBooks");
@@ -237,6 +248,33 @@
                     li.textContent = `${book.title} - Teslim Tarihi: ${book.dueDate}`;
                     list.appendChild(li);
                 });
+            });
+
+        fetch(`http://localhost:8083/api/permissions/role/${user.roleId}`)
+            .then(res => res.json())
+            .then(permissions => {
+                const list = document.getElementById("userPermissions");
+                list.innerHTML = "";
+                permissions.forEach(p => {
+                    const li = document.createElement("li");
+                    li.textContent = `${p.action} → ${p.resource}`;
+                    list.appendChild(li);
+                });
+
+                if (!hasPermission("VIEW_BORROWED_BOOKS", "BOOK", permissions)) {
+                    document.getElementById("borrowed-section").style.display = "none";
+                }
+                if (!hasPermission("VIEW_SOON_DUE_BOOKS", "BOOK", permissions)) {
+                    document.getElementById("due-section").style.display = "none";
+                }
+                if (!hasPermission("VIEW_PERMISSIONS", "USER", permissions)) {
+                    document.getElementById("permission-section").style.display = "none";
+                }
+            })
+            .catch(err => {
+                const list = document.getElementById("userPermissions");
+                list.innerHTML = "<li>Erişim izinleri yüklenemedi.</li>";
+                console.error("Permission fetch failed", err);
             });
     });
 

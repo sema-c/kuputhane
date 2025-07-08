@@ -1,5 +1,6 @@
 package com.kuputhane.userservice.controller;
 
+import com.kuputhane.permissionservice.model.AccessPermission;
 import com.kuputhane.userservice.dto.RegisterRequest;
 import com.kuputhane.userservice.model.User;
 import com.kuputhane.userservice.repository.UserRepository;
@@ -87,4 +88,11 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}/permissions")
+    public ResponseEntity<List<AccessPermission>> getUserPermissions(@PathVariable Long id) {
+        List<AccessPermission> permissions = userService.getPermissionsByUserId(id);
+        return ResponseEntity.ok(permissions);
+    }
+
 }
