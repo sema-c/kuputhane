@@ -1,13 +1,11 @@
 package com.kuputhane.bookservice.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class BookDTO {
 
@@ -18,13 +16,4 @@ public class BookDTO {
     private String categoryName;
     private String publisherName;
     private Boolean available;
-
-    public BookDTO(Long id, String title, String author, Integer year, Boolean available) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.year = year;
-        this.available = available;
-    }
-
 }

@@ -6,14 +6,13 @@ import com.kuputhane.bookservice.model.Book;
 public class BookMapper {
 
     public static BookDTO toDTO(Book book) {
-        return new BookDTO(
-                book.getId(),
-                book.getTitle(),
-                book.getAuthor(),
-                book.getYear(),
-                book.isAvailable()
-
-        );
+        BookDTO dto = new BookDTO();
+        dto.setId(book.getId());
+        dto.setTitle(book.getTitle());
+        dto.setAuthor(book.getAuthor());
+        dto.setYear(book.getYear());
+        dto.setAvailable(book.isAvailable());
+        return dto;
     }
 
     public static BookDTO toDetailedDTO(Book book, String categoryName, String publisherName) {

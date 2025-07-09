@@ -100,25 +100,21 @@ public class BookController {
         }
     }
 
-    // ✅ Kitap ödünç verme
     @PostMapping("/lend")
     public ResponseEntity<?> lendBook(@RequestParam Long bookId, @RequestParam Long userId) {
         return bookService.lendBook(bookId, userId);
     }
 
-    // ✅ Geciken kitapları getir
     @GetMapping("/late")
     public ResponseEntity<List<Book>> getLateBooks() {
         return ResponseEntity.ok(bookService.getLateBooks());
     }
 
-    // ✅ Kitap iade etme
     @PostMapping("/return")
     public ResponseEntity<?> returnBook(@RequestParam Long bookId) {
         return bookService.returnBook(bookId);
     }
 
-    // ✅ Süre uzatma
     @PostMapping("/extend")
     public ResponseEntity<?> extendBook(@RequestParam Long bookId) {
         return bookService.extendBook(bookId);
@@ -132,5 +128,4 @@ public class BookController {
         bookService.save(book);
         return ResponseEntity.ok("Yeni kitap başarıyla eklendi.");
     }
-
 }
