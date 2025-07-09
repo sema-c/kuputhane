@@ -2,43 +2,33 @@ server:
   port: 8085
 
 spring:
-  main:
-    web-application-type: reactive
-
   application:
     name: gateway-service
 
   cloud:
     gateway:
-      server:
-        webflux:
-          routes:
-            - id: user-service
-              uri: http://localhost:8081
-              predicates:
-                - Path=/api/auth/**, /api/users/**, /api/contact/**
+      routes:
+        - id: user-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/auth/**, /api/users/**, /api/contact/**
 
-            - id: book-service
-              uri: http://localhost:8082
-              predicates:
-                - Path=/api/books/**, /api/categories/**, /api/publishers/**
+        - id: book-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/books/**, /api/categories/**, /api/publishers/**
 
-            - id: payment-service
-              uri: http://localhost:8083
-              predicates:
-                - Path=/api/borrow/**, /api/punishment/**
+        - id: payment-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/borrow/**, /api/punishment/**
 
-            - id: permission-service
-              uri: http://localhost:8084
-              predicates:
-                - Path=/api/permissions/**, /api/roles/**
-
-          globalcors:
-            cors-configurations:
-              '[/**]':
-                allowed-origins: "*"
-                allowed-methods: "*"
-                allowed-headers: "*"
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:8081"
+            allowedMethods: "*"
+            allowedHeaders: "*"
 
 eureka:
   client:
