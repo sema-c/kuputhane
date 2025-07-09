@@ -141,9 +141,15 @@
                 e.preventDefault();
                 const query = input.value.trim();
                 if (query === "") {
-                    window.location.href = "search.html";
+                    if (userRole === "USER")
+                        window.location.href = "search-user.html";
+                    else
+                        window.location.href = "search-librarian.html";
                 } else {
-                    window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+                    if (userRole === "USER")
+                        window.location.href = `search-user.html?q=${encodeURIComponent(query)}`;
+                    else
+                        window.location.href = `search-librarian.html?q=${encodeURIComponent(query)}`
                 }
             });
         }

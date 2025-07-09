@@ -17,7 +17,6 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/books")
-@CrossOrigin(origins = "*")
 public class BookController {
 
     private final BookRepository bookRepository;
@@ -128,4 +127,6 @@ public class BookController {
         bookService.save(book);
         return ResponseEntity.ok("Yeni kitap başarıyla eklendi.");
     }
+
+
 }
