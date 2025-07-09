@@ -21,4 +21,7 @@ public class Book {
     private LocalDate dueDate;
     private Long borrowedBy;
     private boolean returned;
+    private Long categoryId;
+    private Long publisherId;
+
 }

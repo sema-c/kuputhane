@@ -2,7 +2,11 @@ package com.kuputhane.bookservice.controller;
 
 import com.kuputhane.bookservice.dto.BookDTO;
 import com.kuputhane.bookservice.model.Book;
+import com.kuputhane.bookservice.model.Category;
+import com.kuputhane.bookservice.model.Publisher;
 import com.kuputhane.bookservice.repository.BookRepository;
+import com.kuputhane.bookservice.repository.CategoryRepository;
+import com.kuputhane.bookservice.repository.PublisherRepository;
 import com.kuputhane.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +25,8 @@ public class BookController {
 
     private final BookService service;
     private final BookRepository repo;
+    private final CategoryRepository categoryRepo;
+    private final PublisherRepository publisherRepo;
 
     @GetMapping
     public ResponseEntity<?> getAllBooksWithPagination(
@@ -106,6 +112,19 @@ public class BookController {
     }
 
     private BookDTO toDto(Book b) {
+        String categoryName = null;
+        String publisherName = null;
+        if (b.getCategoryId() != null) {
+            categoryName = categoryRepo.findById(b.getCategoryId())
+                    .map(Category::getName)
+                    .orElse("Bilinmiyor");
+        }
+
+        if (b.getPublisherId() != null) {
+            publisherName = publisherRepo.findById(b.getPublisherId())
+                    .map(Publisher::getName)
+                    .orElse("Bilinmiyor");
+        }
         return BookDTO.builder()
                 .id(b.getId())
                 .title(b.getTitle())
@@ -116,8 +135,8 @@ public class BookController {
                 .borrowedBy(b.getBorrowedBy())
                 .returned(b.isReturned())
                 // publisher/category lookup varsa buraya ekleyebilirsin:
-                // .categoryName(repo.findCategoryNameById(...))
-                // .publisherName(repo.findPublisherNameById(...))
+                .categoryName(categoryName)
+                .publisherName(publisherName)
                 .build();
     }
 }
