@@ -129,27 +129,22 @@
 <div class="container">
     <div class="filters">
         <h3>Filtrele</h3>
+
         <div>
-            <h4>Yazar</h4>
-            <label><input type="checkbox" name="author" value="Dostoyevski"> Dostoyevski</label>
-            <label><input type="checkbox" name="author" value="Orhan Pamuk"> Orhan Pamuk</label>
+            <h4>Kategori</h4>
+            <ul id="category-tree"></ul>
         </div>
+
         <div>
-            <h4>Format</h4>
-            <label><input type="checkbox" name="format" value="Basılı"> Basılı</label>
-            <label><input type="checkbox" name="format" value="e-Kitap"> e-Kitap</label>
+            <h4>Yayınevi / Kanal</h4>
+            <ul id="publisher-tree"></ul>
         </div>
-        <div>
-            <h4>Dil</h4>
-            <label><input type="checkbox" name="language" value="Türkçe"> Türkçe</label>
-            <label><input type="checkbox" name="language" value="İngilizce"> İngilizce</label>
-        </div>
-        <div>
-            <h4>Raf Konumu</h4>
-            <label><input type="checkbox" name="shelf" value="A1"> A1</label>
-            <label><input type="checkbox" name="shelf" value="B2"> B2</label>
-        </div>
+
+        <div id="static-filters"></div>
     </div>
+
+
+
     <div class="results" id="results"></div>
 </div>
 
@@ -245,6 +240,63 @@
             alert("Geçersiz rol: " + user.role);
         }
     }
+    function renderTree(nodes, parentEl, fieldName) {
+        nodes.forEach(node => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+            <label>
+                <input type="checkbox" name="${fieldName}" value="${node.id}">
+                ${node.name}
+            </label>
+        `;
+            parentEl.appendChild(li);
+            if (node.children && node.children.length) {
+                const ul = document.createElement('ul');
+                li.appendChild(ul);
+                renderTree(node.children, ul, fieldName);
+            }
+        });
+    }
+
+    function fetchAndRenderTree(endpoint, treeId, fieldName) {
+        return fetch(endpoint)
+            .then(res => res.json())
+            .then(tree => renderTree(tree, document.getElementById(treeId), fieldName))
+            .catch(console.warn);
+    }
+
+    function getFilters() {
+        const filters = {};
+        document.querySelectorAll('.filters input[type="checkbox"]').forEach(cb => {
+            if (!filters[cb.name]) filters[cb.name] = new Set();
+            if (cb.checked) filters[cb.name].add(cb.value);
+        });
+        return filters;
+    }
+
+    function applyFilters() {
+        const filters = getFilters();
+        const filtered = allBooks.filter(book => {
+            return Object.entries(filters).every(([key, set]) => {
+                // book[key] mutlaka property isimleriyle eşleşmeli (book.language, book.format vs.)
+                return set.size === 0 || set.has(String(book[key]));
+            });
+        });
+        displayBooks(filtered);
+    }
+
+
+    // --- abone ol change eventine ---
+    document.querySelector('.filters').addEventListener('change', applyFilters);
+
+    // --- sayfa yüklenince önce ağaçlar sonra aramayı tetikle ---
+    Promise.all([
+        fetchAndRenderTree('/api/categories/tree', 'category-tree', 'category'),
+        fetchAndRenderTree('/api/publishers/tree', 'publisher-tree', 'publisher')
+    ]).finally(() => {
+        loadBooks();
+    });
+
 </script>
 
 </body>
