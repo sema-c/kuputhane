@@ -1,21 +1,15 @@
 package com.kuputhane.bookservice.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "publishers")
-@Getter
-@Setter
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor @Builder
 public class Publisher {
-
     @Id
     @Column(name = "publisher_id")
     private Long id;
-
     private String name;
 }

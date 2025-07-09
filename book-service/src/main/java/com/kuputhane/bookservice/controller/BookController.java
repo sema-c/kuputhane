@@ -1,132 +1,117 @@
 package com.kuputhane.bookservice.controller;
 
 import com.kuputhane.bookservice.dto.BookDTO;
-import com.kuputhane.bookservice.mapper.BookMapper;
 import com.kuputhane.bookservice.model.Book;
-import com.kuputhane.bookservice.model.Category;
-import com.kuputhane.bookservice.model.Publisher;
 import com.kuputhane.bookservice.repository.BookRepository;
-import com.kuputhane.bookservice.repository.CategoryRepository;
-import com.kuputhane.bookservice.repository.PublisherRepository;
 import com.kuputhane.bookservice.service.BookService;
-import org.springframework.data.domain.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
+@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class BookController {
 
-    private final BookRepository bookRepository;
-    private final CategoryRepository categoryRepository;
-    private final PublisherRepository publisherRepository;
-    private final BookService bookService;
-
-    public BookController(BookRepository bookRepository,
-                          CategoryRepository categoryRepository,
-                          PublisherRepository publisherRepository,
-                          BookService bookService) {
-        this.bookRepository = bookRepository;
-        this.categoryRepository = categoryRepository;
-        this.publisherRepository = publisherRepository;
-        this.bookService = bookService;
-    }
+    private final BookService service;
+    private final BookRepository repo;
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getBooks(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "6") int size
-    ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Book> bookPage = bookRepository.findAll(pageable);
-
-        List<BookDTO> bookDTOs = bookPage.getContent()
+    public ResponseEntity<List<BookDTO>> getAll() {
+        List<BookDTO> dtos = service.getAllBooks()
                 .stream()
-                .map(BookMapper::toDTO)
+                .map(this::toDto)
                 .toList();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("content", bookDTOs);
-        response.put("currentPage", bookPage.getNumber());
-        response.put("totalItems", bookPage.getTotalElements());
-        response.put("totalPages", bookPage.getTotalPages());
-
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam String q) {
-        List<BookDTO> result = bookRepository.findByTitleContainingIgnoreCase(q)
-                .stream()
-                .map(BookMapper::toDTO)
-                .toList();
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
-        Optional<Book> optionalBook = bookRepository.findById(id);
-        if (optionalBook.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Book book = optionalBook.get();
-
-        String categoryName = categoryRepository.findById((long) book.getCategoryId())
-                .map(Category::getName)
-                .orElse("Kategori Yok");
-
-        String publisherName = publisherRepository.findById((long) book.getPublisherId())
-                .map(Publisher::getName)
-                .orElse("Yayınevi Yok");
-
-        BookDTO dto = BookMapper.toDetailedDTO(book, categoryName, publisherName);
-        return ResponseEntity.ok(dto);
-    }
-
-    @PutMapping("/{id}/availability")
-    public ResponseEntity<String> updateAvailability(@PathVariable Long id, @RequestParam boolean available) {
-        Optional<Book> bookOptional = bookService.getById(id);
-        if (bookOptional.isPresent()) {
-            Book book = bookOptional.get();
-            book.setAvailable(available);
-            bookService.save(book);
-            return ResponseEntity.ok("Durum güncellendi.");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PostMapping("/lend")
-    public ResponseEntity<?> lendBook(@RequestParam Long bookId, @RequestParam Long userId) {
-        return bookService.lendBook(bookId, userId);
-    }
-
-    @GetMapping("/late")
-    public ResponseEntity<List<Book>> getLateBooks() {
-        return ResponseEntity.ok(bookService.getLateBooks());
-    }
-
-    @PostMapping("/return")
-    public ResponseEntity<?> returnBook(@RequestParam Long bookId) {
-        return bookService.returnBook(bookId);
-    }
-
-    @PostMapping("/extend")
-    public ResponseEntity<?> extendBook(@RequestParam Long bookId) {
-        return bookService.extendBook(bookId);
+    public ResponseEntity<BookDTO> getById(@PathVariable Long id) {
+        return service.getById(id)
+                .map(book -> ResponseEntity.ok(toDto(book)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<String> addBook(@RequestBody Book book) {
-        book.setAvailable(true); // yeni kitaplar varsayılan olarak mevcut
-        book.setDueDate(null);   // ödünç değil
-        book.setAvailabilityStatus("MEVCUT"); // varsayım
-        bookService.save(book);
-        return ResponseEntity.ok("Yeni kitap başarıyla eklendi.");
+    public ResponseEntity<BookDTO> create(@RequestBody BookDTO dto) {
+        Book b = Book.builder()
+                .title(dto.getTitle())
+                .author(dto.getAuthor())
+                .year(dto.getYear())
+                .available(true)
+                .build();
+        Book saved = service.save(b);
+        return ResponseEntity.ok(toDto(saved));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<BookDTO> update(
+            @PathVariable Long id,
+            @RequestBody BookDTO dto) {
+        Book b = Book.builder()
+                .id(id)
+                .title(dto.getTitle())
+                .author(dto.getAuthor())
+                .year(dto.getYear())
+                .available(dto.getAvailable() != null && dto.getAvailable())
+                .dueDate(dto.getDueDate())
+                .borrowedBy(dto.getBorrowedBy())
+                .returned(dto.getReturned() != null && dto.getReturned())
+                .build();
+        Book updated = service.save(b);
+        return ResponseEntity.ok(toDto(updated));
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/late")
+    public ResponseEntity<List<BookDTO>> late() {
+        List<BookDTO> dtos = service.getLateBooks()
+                .stream()
+                .map(this::toDto)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
+
+    @PostMapping("/lend")
+    public ResponseEntity<?> lend(
+            @RequestParam Long bookId,
+            @RequestParam Long userId) {
+        return service.lendBook(bookId, userId);
+    }
+
+    @PostMapping("/return")
+    public ResponseEntity<?> ret(
+            @RequestParam Long bookId) {
+        return service.returnBook(bookId);
+    }
+
+    @PostMapping("/extend")
+    public ResponseEntity<?> extend(
+            @RequestParam Long bookId) {
+        return service.extendBook(bookId);
+    }
+
+    private BookDTO toDto(Book b) {
+        return BookDTO.builder()
+                .id(b.getId())
+                .title(b.getTitle())
+                .author(b.getAuthor())
+                .year(b.getYear())
+                .available(b.isAvailable())
+                .dueDate(b.getDueDate())
+                .borrowedBy(b.getBorrowedBy())
+                .returned(b.isReturned())
+                // publisher/category lookup varsa buraya ekleyebilirsin:
+                // .categoryName(repo.findCategoryNameById(...))
+                // .publisherName(repo.findPublisherNameById(...))
+                .build();
+    }
 }

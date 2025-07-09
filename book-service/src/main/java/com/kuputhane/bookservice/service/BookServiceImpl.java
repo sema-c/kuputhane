@@ -2,101 +2,117 @@ package com.kuputhane.bookservice.service;
 
 import com.kuputhane.bookservice.model.Book;
 import com.kuputhane.bookservice.repository.BookRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
-    private final BookRepository bookRepository;
-
-    public BookServiceImpl(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
+    private final BookRepository repo;
 
     @Override
     public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+        return repo.findAll();
     }
 
     @Override
+    @Transactional
     public Book save(Book book) {
-        return bookRepository.save(book);
+        if (book.getId() != null) {
+            Book existing = repo.findById(book.getId())
+                    .orElseThrow(() -> new RuntimeException("Kitap bulunamadı"));
+            existing.setTitle(book.getTitle());
+            existing.setAuthor(book.getAuthor());
+            existing.setYear(book.getYear());
+            existing.setAvailable(book.isAvailable());
+            existing.setDueDate(book.getDueDate());
+            existing.setBorrowedBy(book.getBorrowedBy());
+            existing.setReturned(book.isReturned());
+            return repo.save(existing);
+        } else {
+            // yeni kitap
+            book.setYear(LocalDate.now().getYear());
+            book.setAvailable(true);
+            book.setReturned(false);
+            return repo.save(book);
+        }
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        bookRepository.deleteById(id);
+        repo.deleteById(id);
     }
 
     @Override
     public Optional<Book> getById(Long id) {
-        return bookRepository.findById(id);
+        return repo.findById(id);
     }
 
-    // ✅ Geciken kitaplar
     @Override
     public List<Book> getLateBooks() {
-        LocalDate today = LocalDate.now();
-        return bookRepository.findAll().stream()
-                .filter(book -> book.getDueDate() != null && !book.isReturned() && book.getDueDate().isBefore(today))
-                .collect(Collectors.toList());
+        return repo.findByDueDateBeforeAndReturnedFalse(LocalDate.now());
     }
 
-    // ✅ Kitap ödünç ver
     @Override
+    @Transactional
     public ResponseEntity<?> lendBook(Long bookId, Long userId) {
-        Optional<Book> opt = bookRepository.findById(bookId);
-        if (opt.isEmpty()) return ResponseEntity.badRequest().body("Kitap bulunamadı");
-
-        Book book = opt.get();
-
-        if (!book.isAvailable()) {
-            return ResponseEntity.badRequest().body("Kitap şu anda ödünçte.");
-        }
-
-        book.setAvailable(false);
-        book.setReturned(false);
-        book.setBorrowedBy(userId);
-        book.setDueDate(LocalDate.now().plusDays(14));
-
-        bookRepository.save(book);
-        return ResponseEntity.ok("Kitap başarıyla ödünç verildi.");
+        return repo.findById(bookId)
+                .map(book -> {
+                    if (!book.isAvailable()) {
+                        return ResponseEntity.badRequest()
+                                .body("Kitap şu anda müsait değil.");
+                    }
+                    book.setAvailable(false);
+                    book.setBorrowedBy(userId);
+                    book.setDueDate(LocalDate.now().plusWeeks(2));
+                    repo.save(book);
+                    return ResponseEntity.ok(
+                            "Kitap ödünç verildi. Son teslim: " + book.getDueDate()
+                    );
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> returnBook(Long bookId) {
-        Optional<Book> opt = bookRepository.findById(bookId);
-        if (opt.isEmpty()) return ResponseEntity.badRequest().body("Kitap bulunamadı");
-
-        Book book = opt.get();
-        book.setAvailable(true);
-        book.setReturned(true);
-        book.setBorrowedBy(null);
-        book.setDueDate(null);
-
-        bookRepository.save(book);
-        return ResponseEntity.ok("Kitap iade edildi.");
+        return repo.findById(bookId)
+                .map(book -> {
+                    if (book.isReturned() || book.isAvailable()) {
+                        return ResponseEntity.badRequest()
+                                .body("Bu kitap ödünç verilmemiş veya zaten iade edilmiş.");
+                    }
+                    book.setReturned(true);
+                    book.setAvailable(true);
+                    repo.save(book);
+                    return ResponseEntity.ok("Kitap başarıyla iade edildi.");
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> extendBook(Long bookId) {
-        Optional<Book> opt = bookRepository.findById(bookId);
-        if (opt.isEmpty()) return ResponseEntity.badRequest().body("Kitap bulunamadı");
-
-        Book book = opt.get();
-        if (book.getDueDate() == null) {
-            return ResponseEntity.badRequest().body("Bu kitabın teslim tarihi yok.");
-        }
-
-        book.setDueDate(book.getDueDate().plusDays(7));
-        bookRepository.save(book);
-        return ResponseEntity.ok("Teslim süresi uzatıldı.");
+        return repo.findById(bookId)
+                .map(book -> {
+                    if (book.isAvailable() || book.isReturned()) {
+                        return ResponseEntity.badRequest()
+                                .body("Bu kitap şu anda ödünçte değil.");
+                    }
+                    book.setDueDate(book.getDueDate().plusWeeks(1));
+                    repo.save(book);
+                    return ResponseEntity.ok(
+                            "Teslim tarihi uzatıldı: " + book.getDueDate()
+                    );
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }
-

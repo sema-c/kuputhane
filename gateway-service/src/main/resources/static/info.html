@@ -157,34 +157,23 @@
         });
 
     function borrowBook() {
-        if (!userId || isNaN(userId)) {
-            alert("Kullanıcı bilgisi alınamadı. Lütfen tekrar giriş yapın.");
-            window.location.href = "login-register.html";
-            return;
-        }
+        const bookId = parseInt(params.get('id'));
+        const userId = parseInt(sessionStorage.getItem("userId"));
 
-        fetch("http://localhost:8085/api/borrow", {
+        fetch(`http://localhost:8085/api/books/lend?bookId=${bookId}&userId=${userId}`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                bookId: parseInt(bookId),
-                userId: parseInt(userId)
-            })
         })
             .then(res => {
                 if (res.ok) {
                     alert("Kitap ödünç alındı!");
                     window.location.reload();
                 } else {
-                    alert("İşlem başarısız.");
+                    res.text().then(txt => alert("İşlem başarısız: " + txt));
                 }
             })
-            .catch(() => {
-                alert("Sunucuya ulaşılamadı.");
-            });
+            .catch(() => alert("Sunucuya ulaşılamadı."));
     }
+
 
     function goToDashboard() {
         const user = JSON.parse(localStorage.getItem("loggedInUser"));

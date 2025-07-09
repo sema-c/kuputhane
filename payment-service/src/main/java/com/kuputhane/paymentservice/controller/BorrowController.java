@@ -1,5 +1,6 @@
 package com.kuputhane.paymentservice.controller;
 
+import com.kuputhane.paymentservice.dto.BorrowRequest;
 import com.kuputhane.paymentservice.service.BorrowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class BorrowController {
     }
 
     @PostMapping
-    public boolean borrowBook(@RequestParam Long userId, @RequestParam Long bookId) {
-        return borrowService.borrowBook(userId, bookId);
+    public boolean borrowBook(@RequestBody BorrowRequest request) {
+        return borrowService.borrowBook(request.getUserId(), request.getBookId());
     }
 }

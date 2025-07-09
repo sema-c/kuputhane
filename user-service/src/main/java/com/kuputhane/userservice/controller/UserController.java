@@ -92,10 +92,9 @@ public class UserController {
     @GetMapping("/{id}/permissions")
     public ResponseEntity<List<Long>> getUserPermissions(@PathVariable Long id) {
         List<AccessPermission> permissions = userService.getPermissionsByUserId(id);
-        List<Long> permissionIds = permissions.stream()
+        List<Long> ids = permissions.stream()
                 .map(AccessPermission::getId)
                 .toList();
-        return ResponseEntity.ok(permissionIds);
+        return ResponseEntity.ok(ids);
     }
-
 }
