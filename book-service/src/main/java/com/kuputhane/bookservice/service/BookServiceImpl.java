@@ -122,7 +122,6 @@ public class BookServiceImpl implements BookService {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // ✅ EKLENDİ: Arama fonksiyonu
     @Override
     public List<Book> searchBooks(String query) {
         return repo.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(query, query);

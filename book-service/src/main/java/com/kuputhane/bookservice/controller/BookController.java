@@ -142,7 +142,6 @@ public class BookController {
                 .dueDate(b.getDueDate())
                 .borrowedBy(b.getBorrowedBy())
                 .returned(b.isReturned())
-                // publisher/category lookup varsa buraya ekleyebilirsin:
                 .categoryName(categoryName)
                 .publisherName(publisherName)
                 .build();
