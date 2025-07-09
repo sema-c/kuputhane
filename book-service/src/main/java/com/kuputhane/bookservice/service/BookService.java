@@ -12,7 +12,7 @@ public interface BookService {
     void delete(Long id);
     Optional<Book> getById(Long id);
     List<Book> getLateBooks();
-    ResponseEntity<?> lendBook(Long bookId);
+    ResponseEntity<?> lendBook(Long bookId, Long userId);
     ResponseEntity<?> returnBook(Long bookId);
     ResponseEntity<?> extendBook(Long bookId);
 }

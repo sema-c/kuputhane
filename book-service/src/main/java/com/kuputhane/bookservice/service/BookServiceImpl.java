@@ -39,27 +39,34 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findById(id);
     }
 
+    // ✅ Geciken kitaplar
     @Override
     public List<Book> getLateBooks() {
-        List<Book> allBooks = bookRepository.findAll();
         LocalDate today = LocalDate.now();
-
-        return allBooks.stream()
-                .filter(book -> book.getDueDate() != null && book.getDueDate().isBefore(today))
+        return bookRepository.findAll().stream()
+                .filter(book -> book.getDueDate() != null && !book.isReturned() && book.getDueDate().isBefore(today))
                 .collect(Collectors.toList());
     }
 
+    // ✅ Kitap ödünç ver
     @Override
-    public ResponseEntity<?> lendBook(Long bookId) {
+    public ResponseEntity<?> lendBook(Long bookId, Long userId) {
         Optional<Book> opt = bookRepository.findById(bookId);
         if (opt.isEmpty()) return ResponseEntity.badRequest().body("Kitap bulunamadı");
 
         Book book = opt.get();
-        book.setAvailable(true);
-        book.setDueDate(LocalDate.now().plusDays(14)); // 2 hafta ödünç
-        bookRepository.save(book);
 
-        return ResponseEntity.ok("Kitap ödünç verildi.");
+        if (!book.isAvailable()) {
+            return ResponseEntity.badRequest().body("Kitap şu anda ödünçte.");
+        }
+
+        book.setAvailable(false);
+        book.setReturned(false);
+        book.setBorrowedBy(userId);
+        book.setDueDate(LocalDate.now().plusDays(14));
+
+        bookRepository.save(book);
+        return ResponseEntity.ok("Kitap başarıyla ödünç verildi.");
     }
 
     @Override
@@ -68,11 +75,13 @@ public class BookServiceImpl implements BookService {
         if (opt.isEmpty()) return ResponseEntity.badRequest().body("Kitap bulunamadı");
 
         Book book = opt.get();
-        book.setAvailable(false);
+        book.setAvailable(true);
+        book.setReturned(true);
+        book.setBorrowedBy(null);
         book.setDueDate(null);
-        bookRepository.save(book);
 
-        return ResponseEntity.ok("Kitap teslim edildi.");
+        bookRepository.save(book);
+        return ResponseEntity.ok("Kitap iade edildi.");
     }
 
     @Override
@@ -81,9 +90,13 @@ public class BookServiceImpl implements BookService {
         if (opt.isEmpty()) return ResponseEntity.badRequest().body("Kitap bulunamadı");
 
         Book book = opt.get();
-        book.setDueDate(book.getDueDate().plusDays(7)); // +7 gün
-        bookRepository.save(book);
+        if (book.getDueDate() == null) {
+            return ResponseEntity.badRequest().body("Bu kitabın teslim tarihi yok.");
+        }
 
+        book.setDueDate(book.getDueDate().plusDays(7));
+        bookRepository.save(book);
         return ResponseEntity.ok("Teslim süresi uzatıldı.");
     }
 }
+

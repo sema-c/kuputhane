@@ -103,6 +103,84 @@
                 checkPermission(7, "permission-lend-book");
             });
     });
+    function lendBook() {
+        const bookId = document.getElementById("bookId").value;
+        const userJson = localStorage.getItem("loggedInUser");
+        const user = JSON.parse(userJson);
+
+        if (!bookId || isNaN(bookId)) {
+            alert("Geçerli bir Kitap ID giriniz.");
+            return;
+        }
+
+        fetch(`http://localhost:8082/api/books/lend?bookId=${bookId}&userId=${user.id}`, {
+            method: "POST"
+        })
+            .then(res => res.text())
+            .then(msg => alert(msg))
+            .catch(err => alert("Bir hata oluştu: " + err));
+    }
+    function loadLateBooks() {
+        fetch("http://localhost:8082/api/books/late")
+            .then(res => res.json())
+            .then(data => {
+                const ul = document.getElementById("lateBooks");
+                ul.innerHTML = ""; // önce temizle
+                if (data.length === 0) {
+                    ul.innerHTML = "<li>Geciken kitap yok.</li>";
+                    return;
+                }
+                data.forEach(book => {
+                    const li = document.createElement("li");
+                    li.textContent = `📚 ${book.title} (Yazar: ${book.author}) - Teslim tarihi: ${book.dueDate}`;
+                    ul.appendChild(li);
+                });
+            })
+            .catch(err => {
+                alert("Geciken kitaplar yüklenemedi.");
+                console.error(err);
+            });
+    }
+    function logout() {
+        localStorage.removeItem("loggedInUser");
+        window.location.href = "login-register.html";
+    }
+
+    function goToDashboard() {
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (user.role === "LIBRARIAN") {
+            window.location.href = "dashboard-librarian.html";
+        } else {
+            window.location.href = "dashboard-user.html";
+        }
+    }
+        function addNewBook() {
+        const title = document.getElementById("newBookTitle").value;
+        const author = document.getElementById("newBookAuthor").value;
+
+        if (!title || !author) {
+        alert("Lütfen kitap adı ve yazar giriniz.");
+        return;
+    }
+
+        const newBook = {
+        title: title,
+        author: author,
+        available: true
+    };
+
+        fetch("http://localhost:8082/api/books", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newBook)
+    })
+        .then(res => {
+        if (!res.ok) throw new Error("Ekleme başarısız");
+        return res.text();
+    })
+        .then(msg => alert("✅ " + msg))
+        .catch(err => alert("Hata: " + err.message));
+    }
 </script>
 </body>
 </html>

@@ -20,7 +20,6 @@ public class Book {
     private String title;
     private String author;
     private int year;
-
     private String isbn;
     private String location;
 
@@ -42,9 +41,9 @@ public class Book {
 
     @Column(name = "image_url")
     private String imageUrl;
-    
-    public Boolean getAvailable() {
-        return !this.available;
-    }
+
+    private Long borrowedBy;
+
+    private boolean returned;
 
 }
