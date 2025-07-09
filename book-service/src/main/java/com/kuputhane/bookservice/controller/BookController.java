@@ -5,6 +5,9 @@ import com.kuputhane.bookservice.model.Book;
 import com.kuputhane.bookservice.repository.BookRepository;
 import com.kuputhane.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +23,15 @@ public class BookController {
     private final BookRepository repo;
 
     @GetMapping
-    public ResponseEntity<List<BookDTO>> getAll() {
-        List<BookDTO> dtos = service.getAllBooks()
-                .stream()
-                .map(this::toDto)
-                .toList();
-        return ResponseEntity.ok(dtos);
+    public ResponseEntity<?> getAllBooksWithPagination(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Book> bookPage = service.getAllBooksPageable(pageable);
+
+        Page<BookDTO> dtoPage = bookPage.map(this::toDto);
+        return ResponseEntity.ok(dtoPage);
     }
 
     @GetMapping("/{id}")

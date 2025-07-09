@@ -1,6 +1,8 @@
 package com.kuputhane.bookservice.service;
 
 import com.kuputhane.bookservice.model.Book;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -15,4 +17,6 @@ public interface BookService {
     ResponseEntity<?> lendBook(Long bookId, Long userId);
     ResponseEntity<?> returnBook(Long bookId);
     ResponseEntity<?> extendBook(Long bookId);
+    Page<Book> getAllBooksPageable(Pageable pageable);
+
 }

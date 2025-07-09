@@ -3,6 +3,8 @@ package com.kuputhane.bookservice.service;
 import com.kuputhane.bookservice.model.Book;
 import com.kuputhane.bookservice.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,12 @@ public class BookServiceImpl implements BookService {
         return repo.findAll();
     }
 
+    // ✅ EKLENDİ: Sayfalı kitapları döndür
+    @Override
+    public Page<Book> getAllBooksPageable(Pageable pageable) {
+        return repo.findAll(pageable);
+    }
+
     @Override
     @Transactional
     public Book save(Book book) {
@@ -37,7 +45,6 @@ public class BookServiceImpl implements BookService {
             existing.setReturned(book.isReturned());
             return repo.save(existing);
         } else {
-            // yeni kitap
             book.setYear(LocalDate.now().getYear());
             book.setAvailable(true);
             book.setReturned(false);
