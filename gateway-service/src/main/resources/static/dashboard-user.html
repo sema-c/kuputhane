@@ -179,15 +179,9 @@
         const input = document.getElementById("searchInput");
         const query = input.value.trim();
         if (query === "") {
-            if (user.role === "USER")
-                window.location.href = "search-user.html";
-            else
-                window.location.href = "search-librarian.html";
+            window.location.href = "search.html";
         } else {
-            if (user.role === "USER")
-                window.location.href = `search-user.html?q=${encodeURIComponent(query)}`;
-            else
-                window.location.href = `search-librarian.html?q=${encodeURIComponent(query)}`
+            window.location.href = `search.html?q=${encodeURIComponent(query)}`;
         }
     });
 
