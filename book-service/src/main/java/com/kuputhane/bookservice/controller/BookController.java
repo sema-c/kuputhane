@@ -111,6 +111,14 @@ public class BookController {
         return service.extendBook(bookId);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam("q") String query) {
+        List<Book> books = service.searchBooks(query);
+        List<BookDTO> dtos = books.stream().map(this::toDto).toList();
+        return ResponseEntity.ok(dtos);
+    }
+
+
     private BookDTO toDto(Book b) {
         String categoryName = null;
         String publisherName = null;

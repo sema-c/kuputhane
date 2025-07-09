@@ -20,4 +20,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query(value = "SELECT name FROM publishers WHERE id = :id", nativeQuery = true)
     String findPublisherNameById(@Param("id") Long id);
 
+    List<Book> findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(String title, String author);
+
 }

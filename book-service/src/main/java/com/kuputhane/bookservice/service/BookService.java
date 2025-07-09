@@ -18,5 +18,6 @@ public interface BookService {
     ResponseEntity<?> returnBook(Long bookId);
     ResponseEntity<?> extendBook(Long bookId);
     Page<Book> getAllBooksPageable(Pageable pageable);
+    List<Book> searchBooks(String query);
 
 }
