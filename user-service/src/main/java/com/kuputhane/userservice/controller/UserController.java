@@ -98,7 +98,6 @@ public class UserController {
         return ResponseEntity.ok(ids);
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping("/count")
     public Map<String, Long> getUserCount() {
         long totalUsers = userRepository.count();

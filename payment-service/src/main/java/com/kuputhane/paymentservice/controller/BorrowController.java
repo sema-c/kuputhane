@@ -10,6 +10,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/borrow")
+@CrossOrigin(origins = "*")
 public class BorrowController {
 
     private final BorrowService borrowService;
@@ -24,12 +25,5 @@ public class BorrowController {
     @PostMapping
     public boolean borrowBook(@RequestBody BorrowRequest request) {
         return borrowService.borrowBook(request.getUserId(), request.getBookId());
-    }
-
-    @CrossOrigin(origins = "*")
-    @GetMapping("/count")
-    public Map<String, Long> getBorrowedCount() {
-        long cnt = borrowRepository.countByReturnedFalse();
-        return Map.of("count", cnt);
     }
 }

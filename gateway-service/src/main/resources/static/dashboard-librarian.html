@@ -90,7 +90,6 @@
             <ul>
                 <li>Toplam Kitap: <strong id="statTotalBooks">–</strong></li>
                 <li>Aktif Kullanıcı: <strong id="statTotalUsers">–</strong></li>
-                <li>Geciken Kitap: <strong id="statTotalBorrowed">–</strong></li>
             </ul>
         </section>
     </div>
@@ -130,6 +129,7 @@
                 checkPermission(5, "permission-add-book");
                 checkPermission(7, "permission-lend-book");
             });
+        refreshStats();
     });
     function lendBook() {
         const userId = Number(document.getElementById("lendUserId").value);
@@ -161,24 +161,21 @@
 
     function refreshStats() {
         Promise.all([
-            fetch("http://localhost:8082/api/books/count"),
-            fetch("http://localhost:8081/api/users/count"),
-            fetch("http://localhost:8083/api/borrow/count")
+            fetch("http://localhost:8085/api/books/count"),
+            fetch("http://localhost:8085/api/users/count")
         ])
-            .then(([bRes, uRes, boRes]) => {
-                if (!bRes.ok || !uRes.ok || !boRes.ok) throw new Error();
-                return Promise.all([bRes.json(), uRes.json(), boRes.json()]);
+            .then(([bRes, uRes]) => {
+                if (!bRes.ok || !uRes.ok ) throw new Error();
+                return Promise.all([bRes.json(), uRes.json()]);
             })
-            .then(([bJson, uJson, boJson]) => {
+            .then(([bJson, uJson]) => {
                 document.getElementById("statTotalBooks").textContent    = bJson.count;
                 document.getElementById("statTotalUsers").textContent    = uJson.count;
-                document.getElementById("statTotalBorrowed").textContent = boJson.count;
             })
             .catch(() => {
                 console.warn("Stat yenileme başarısız");
             });
     }
-
 
     function loadLateBooks() {
         fetch("http://localhost:8082/api/books/late")
