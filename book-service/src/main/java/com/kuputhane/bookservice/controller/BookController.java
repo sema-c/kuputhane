@@ -151,7 +151,7 @@ public class BookController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
-
+    @CrossOrigin(origins = "*")
     @GetMapping("/count")
     public Map<String, Long> getBookCount() {
         long total = service.getAllBooks().size();

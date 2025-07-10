@@ -1,4 +1,3 @@
-<!-- dashboard-librarian.html -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -44,26 +43,20 @@
         <p>Email: <strong id="userEmail">-</strong></p>
         <p>Rol: <strong id="userRole">-</strong></p>
     </section>
-    <section>
-        <h2>⌛ Geciken Kitaplar</h2>
-        <button onclick="loadLateBooks()">Yenile</button>
-        <ul id="lateBooks"></ul>
-    </section>
+
     <section id="permission-lend-book">
         <h2>📖 Kitap Ödünç Ver</h2>
-
         <input type="number" id="lendUserId" placeholder="Kullanıcı ID" class="form-input" />
-
-        <input type="number" id="bookId"     placeholder="Kitap ID"    class="form-input" />
+        <input type="number" id="bookId" placeholder="Kitap ID" class="form-input" />
         <button onclick="lendBook()">Ödünç Ver</button>
     </section>
 
     <section id="permission-add-book">
         <h2>➕ Yeni Kitap Ekle</h2>
-        <input type="text"   id="newBookTitle"       class="form-input" placeholder="Kitap Adı"/>
-        <input type="text"   id="newBookAuthor"      class="form-input" placeholder="Yazar"/>
-        <input type="number" id="newBookYear"        class="form-input" placeholder="Basım Yılı"/>
-        <input type="text"   id="newBookLocation"    class="form-input" placeholder="Konum"/>
+        <input type="text" id="newBookTitle" class="form-input" placeholder="Kitap Adı" />
+        <input type="text" id="newBookAuthor" class="form-input" placeholder="Yazar" />
+        <input type="number" id="newBookYear" class="form-input" placeholder="Basım Yılı" />
+        <input type="text" id="newBookLocation" class="form-input" placeholder="Konum" />
         <select id="newBookCategoryId" class="form-input">
             <option value="">Kategori Seçin</option>
             <option value="1">Roman</option>
@@ -71,7 +64,6 @@
             <option value="3">Tarih</option>
             <option value="4">Sanat</option>
         </select>
-
         <select id="newBookPublisherId" class="form-input">
             <option value="">Yayınevi Seçin</option>
             <option value="1">Can Yayınları</option>
@@ -79,27 +71,32 @@
             <option value="3">İletişim Yayınları</option>
             <option value="4">Pegasus Yayınları</option>
         </select>
-        <input type="text"   id="newBookIsbn"        class="form-input" placeholder="ISBN"/>
-        <input type="text"   id="newBookFormat"      class="form-input" placeholder="Format"/>
-        <input type="text"   id="newBookLanguage"    class="form-input" placeholder="Dil"/>
-        <input type="text"   id="newBookImageUrl"    class="form-input" placeholder="Resim URL"/>
+        <input type="text" id="newBookIsbn" class="form-input" placeholder="ISBN" />
+        <input type="text" id="newBookFormat" class="form-input" placeholder="Format" />
+        <input type="text" id="newBookLanguage" class="form-input" placeholder="Dil" />
+        <input type="text" id="newBookImageUrl" class="form-input" placeholder="Resim URL" />
         <button onclick="addNewBook()">Ekle</button>
     </section>
 
-    <section>
-        <h2>📊 İstatistikler</h2>
-        <ul>
-            <li>Toplam Kitap:       <strong id="statTotalBooks">–</strong></li>
-            <li>Aktif Kullanıcı:    <strong id="statTotalUsers">–</strong></li>
-            <li>Geciken Kitap:      <strong id="statTotalBorrowed">–</strong></li>
-        </ul>
-    </section>
+    <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <section style="min-height: 250px;">
+            <h2>⌛ Geciken Kitaplar</h2>
+            <button onclick="loadLateBooks()">Yenile</button>
+            <ul id="lateBooks"></ul>
+        </section>
 
-    <section>
-        <h2>🔔 Bildirimler</h2>
-        <ul><li>Yükleniyor...</li></ul>
-    </section>
+        <section style="min-height: 250px; margin-top: 2.5rem;">
+            <h2>📊 İstatistikler</h2>
+            <ul>
+                <li>Toplam Kitap: <strong id="statTotalBooks">–</strong></li>
+                <li>Aktif Kullanıcı: <strong id="statTotalUsers">–</strong></li>
+                <li>Geciken Kitap: <strong id="statTotalBorrowed">–</strong></li>
+            </ul>
+        </section>
+    </div>
+
 </main>
+
 <footer>
     <p>© 2025 Kütüphane Yönetim Sistemi</p>
     <p>İletişim: kutuphane@ornek.com | Tel: (0312) 000 00 00</p>
@@ -164,9 +161,9 @@
 
     function refreshStats() {
         Promise.all([
-            fetch("/api/books/count"),
-            fetch("/api/users/count"),
-            fetch("/api/borrow/count")
+            fetch("http://localhost:8082/api/books/count"),
+            fetch("http://localhost:8081/api/users/count"),
+            fetch("http://localhost:8083/api/borrow/count")
         ])
             .then(([bRes, uRes, boRes]) => {
                 if (!bRes.ok || !uRes.ok || !boRes.ok) throw new Error();

@@ -26,6 +26,7 @@ public class BorrowController {
         return borrowService.borrowBook(request.getUserId(), request.getBookId());
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/count")
     public Map<String, Long> getBorrowedCount() {
         long cnt = borrowRepository.countByReturnedFalse();
