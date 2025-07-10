@@ -9,24 +9,24 @@ spring:
     gateway:
       routes:
         - id: user-service
-          uri: http://localhost:8081
+          uri: lb://user-service
           predicates:
             - Path=/api/auth/**, /api/users/**, /api/contact/**
 
         - id: book-service
-          uri: http://localhost:8082
+          uri: lb://book-service
           predicates:
             - Path=/api/books/**, /api/categories/**, /api/publishers/**
 
         - id: payment-service
-          uri: http://localhost:8083
+          uri: lb://payment-service
           predicates:
             - Path=/api/borrow/**, /api/punishment/**
 
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "http://localhost:8081"
+            allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "*"
 
