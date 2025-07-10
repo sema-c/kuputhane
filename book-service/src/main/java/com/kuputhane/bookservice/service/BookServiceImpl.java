@@ -77,6 +77,7 @@ public class BookServiceImpl implements BookService {
                                 .body("Kitap şu anda müsait değil.");
                     }
                     book.setAvailable(false);
+                    book.setReturned(false);
                     book.setBorrowedBy(userId);
                     book.setDueDate(LocalDate.now().plusWeeks(2));
                     repo.save(book);
@@ -126,4 +127,16 @@ public class BookServiceImpl implements BookService {
     public List<Book> searchBooks(String query) {
         return repo.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(query, query);
     }
+
+    @Override
+    public List<Book> getBorrowedBooks(Long userId){
+        return repo.findByBorrowedByAndReturnedFalse(userId);
+    }
+
+    @Override
+    public List<Book> getSoonDueBooks(Long userId) {
+        LocalDate maxDate = LocalDate.now().plusDays(3);
+        return repo.findSoonDueBooks(userId, maxDate);
+    }
+
 }

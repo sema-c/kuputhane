@@ -21,5 +21,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     String findPublisherNameById(@Param("id") Long id);
 
     List<Book> findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(String title, String author);
+    List<Book> findByBorrowedByAndReturnedFalse(Long userId);
+
+    @Query("SELECT b FROM Book b WHERE b.borrowedBy = :userId AND b.dueDate <= :maxDate AND b.returned = false")
+    List<Book> findSoonDueBooks(@Param("userId") Long userId,
+                                @Param("maxDate") LocalDate maxDate);
 
 }

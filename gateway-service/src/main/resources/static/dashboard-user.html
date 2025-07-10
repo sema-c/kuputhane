@@ -170,6 +170,8 @@
 </footer>
 
 <script>
+    const BOOK_SERVICE = "http://localhost:8082/api/books"; // book-service portu 8082
+
     function logout() {
         localStorage.removeItem("loggedInUser");
         window.location.href = "login-register.html";
@@ -186,17 +188,14 @@
     });
 
     function returnBook(bookId) {
-        const userId = sessionStorage.getItem("userId");
-        fetch(`http://localhost:8084/return`, {
+        fetch(`${BOOK_SERVICE}/return`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ bookId: parseInt(bookId), userId: parseInt(userId) })
+            body: JSON.stringify({ bookId, userId: Number(sessionStorage.getItem("userId")) })
         })
-            .then(res => res.text())
-            .then(msg => {
-                alert(msg);
-                window.location.reload();
-            });
+            .then(r => r.text())
+            .then(alert)
+            .then(() => location.reload());
     }
 
     function hasPermission(action, resource, permissions) {
@@ -222,35 +221,37 @@
         document.getElementById("userEmail").textContent = user.email || "-";
         document.getElementById("userRole").textContent = user.role || "-";
 
-        fetch(`http://localhost:8084/borrowed/${userId}`)
+        fetch(`${BOOK_SERVICE}/borrowed/${userId}`)
             .then(res => res.json())
             .then(data => {
                 const list = document.getElementById("borrowedBooks");
                 list.innerHTML = "";
                 data.forEach(book => {
                     const li = document.createElement("li");
-                    li.textContent = `${book.title} - Teslim Tarihi: ${book.dueDate}`;
+                    li.textContent = `${book.title} – Teslim Tarihi: ${book.dueDate}`;
                     const returnBtn = document.createElement("button");
                     returnBtn.textContent = "Teslim Et";
+                    returnBtn.style.marginLeft = "10px";  // burada boşluk eklendi
                     returnBtn.onclick = () => returnBook(book.id);
                     li.appendChild(returnBtn);
                     list.appendChild(li);
                 });
             });
 
-        fetch(`http://localhost:8084/borrowed/soon-due/${userId}`)
+        fetch(`${BOOK_SERVICE}/borrowed/soon-due/${userId}`)
             .then(res => res.json())
             .then(data => {
                 const list = document.getElementById("soonDueBooks");
                 list.innerHTML = "";
                 data.forEach(book => {
                     const li = document.createElement("li");
-                    li.textContent = `${book.title} - Teslim Tarihi: ${book.dueDate}`;
+                    li.textContent = `${book.title} – Teslim Tarihi: ${book.dueDate}`;
                     list.appendChild(li);
                 });
             });
 
-        fetch(`http://localhost:8083/api/permissions/role/${user.roleId}`)
+
+        fetch(`http://localhost:8084/api/permissions/role/${user.roleId}`)
             .then(res => res.json())
             .then(permissions => {
                 const list = document.getElementById("userPermissions");

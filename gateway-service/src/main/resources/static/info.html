@@ -105,7 +105,7 @@
     <nav>
         <a href="http://localhost:8081/index.html" class="active">Ana Sayfa</a>
         <a href="#" onclick="goToDashboard()">Hesabım</a>
-        <a href="http://localhost:8081/login-register.html">Çıkış</a>
+        <a href="login-register.html">Çıkış</a>
     </nav>
 </header>
 
@@ -183,9 +183,9 @@
         }
 
         if (user.role === "LIBRARIAN") {
-            window.location.href = "http://localhost:8081/dashboard-librarian.html";
+            window.location.href = "http://localhost:8085/dashboard-librarian.html";
         } else if (user.role === "USER") {
-            window.location.href = "http://localhost:8081/dashboard-user.html";
+            window.location.href = "http://localhost:8085/dashboard-user.html";
         } else {
             alert("Geçersiz rol: " + user.role);
         }

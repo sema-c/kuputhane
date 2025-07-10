@@ -118,6 +118,24 @@ public class BookController {
         return ResponseEntity.ok(dtos);
     }
 
+    @GetMapping("/borrowed/{userId}")
+    public ResponseEntity<List<BookDTO>> borrowed(@PathVariable Long userId) {
+        List<BookDTO> dtos = service.getBorrowedBooks(userId)
+                .stream()
+                .map(this::toDto)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/borrowed/soon-due/{userId}")
+    public ResponseEntity<List<BookDTO>> soonDue(@PathVariable Long userId) {
+        List<BookDTO> dtos = service.getSoonDueBooks(userId)
+                .stream()
+                .map(this::toDto)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
+
     private BookDTO toDto(Book b) {
         String categoryName = null;
         String publisherName = null;
