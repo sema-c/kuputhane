@@ -97,4 +97,10 @@ public class UserController {
                 .toList();
         return ResponseEntity.ok(ids);
     }
+
+    @GetMapping("/count")
+    public Map<String, Long> getUserCount() {
+        long totalUsers = userRepository.count();
+        return Map.of("count", totalUsers);
+    }
 }
