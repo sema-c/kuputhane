@@ -127,7 +127,7 @@
         <span class="logo-text">Küpüthanem</span>
     </div>
     <nav>
-        <a href="index-old.html">Ana Sayfa</a>
+        <a href="index-old.html">Kitaplar</a>
         <a href="#" onclick="goToDashboard()">Hesabım</a>
         <a href="login-register.html" onclick="logout()">Çıkış</a>
     </nav>
@@ -231,7 +231,7 @@
                     li.textContent = `${book.title} – Teslim Tarihi: ${book.dueDate}`;
                     const returnBtn = document.createElement("button");
                     returnBtn.textContent = "Teslim Et";
-                    returnBtn.style.marginLeft = "10px";  // burada boşluk eklendi
+                    returnBtn.style.marginLeft = "10px";
                     returnBtn.onclick = () => returnBook(book.id);
                     li.appendChild(returnBtn);
                     list.appendChild(li);
