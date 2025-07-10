@@ -170,7 +170,7 @@
 </footer>
 
 <script>
-    const BOOK_SERVICE = "http://localhost:8082/api/books"; // book-service portu 8082
+    const BOOK_SERVICE = "http://localhost:8082/api/books";
 
     function logout() {
         localStorage.removeItem("loggedInUser");
@@ -188,10 +188,8 @@
     });
 
     function returnBook(bookId) {
-        fetch(`${BOOK_SERVICE}/return`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ bookId, userId: Number(sessionStorage.getItem("userId")) })
+        fetch(`${BOOK_SERVICE}/return?bookId=${bookId}`, {
+            method: "POST"
         })
             .then(r => r.text())
             .then(alert)
@@ -249,7 +247,6 @@
                     list.appendChild(li);
                 });
             });
-
 
         fetch(`http://localhost:8084/api/permissions/role/${user.roleId}`)
             .then(res => res.json())

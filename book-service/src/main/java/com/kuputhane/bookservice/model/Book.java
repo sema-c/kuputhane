@@ -18,6 +18,7 @@ public class Book {
     private Integer year;
 
     private boolean available;
+    private LocalDate borrowDate;
     private LocalDate dueDate;
     private Long borrowedBy;
     private boolean returned;
