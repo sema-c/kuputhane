@@ -285,11 +285,8 @@
     displayBooks(filtered);
   }
 
-
-  // --- abone ol change eventine ---
   document.querySelector('.filters').addEventListener('change', applyFilters);
 
-  // --- sayfa yüklenince önce ağaçlar sonra aramayı tetikle ---
   Promise.all([
     fetchAndRenderTree('/api/categories/tree', 'category-tree', 'category'),
     fetchAndRenderTree('/api/publishers/tree', 'publisher-tree', 'publisher')

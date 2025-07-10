@@ -118,7 +118,6 @@ public class BookController {
         return ResponseEntity.ok(dtos);
     }
 
-
     private BookDTO toDto(Book b) {
         String categoryName = null;
         String publisherName = null;
