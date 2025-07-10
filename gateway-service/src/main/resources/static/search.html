@@ -21,11 +21,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
     }
 
     .logo-container {
       display: flex;
       align-items: center;
+      cursor: pointer;
     }
 
     .logo-img {
@@ -36,6 +38,7 @@
     .logo-text {
       font-family: 'Just Another Hand', cursive;
       font-size: 28px;
+      color: #e5c07b;
     }
 
     nav a {
@@ -51,52 +54,51 @@
       color: #3b2f5c;
     }
 
-    .container {
+    .search-section {
       display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 20px;
+      gap: 10px;
+      background-color: #f0eaff;
     }
 
-    .filters {
+    .search-section input {
+      padding: 8px;
       width: 250px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(147, 112, 219, 0.2);
-      margin-right: 20px;
-      border-left: 4px solid #3b2f5c;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
     }
 
-    .filters h3 {
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: #3b2f5c;
-    }
-
-    .filters h4 {
-      margin-top: 15px;
-      color: #3b2f5c;
-      font-size: 16px;
-    }
-
-    .filters label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: #444;
+    .search-section button {
+      padding: 8px 12px;
+      background-color: #3b2f5c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
     }
 
     .results {
-      flex: 1;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
     }
 
     .book-card {
       background: #fff;
       padding: 15px;
-      margin-bottom: 15px;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(147, 112, 219, 0.1);
       border-left: 4px solid #3b2f5c;
       color: #333;
+      width: 250px;
+      box-sizing: border-box;
     }
 
     .book-card h3 {
@@ -114,90 +116,30 @@
 <body>
 
 <header>
-  <div class="logo-container" style="cursor: pointer;" onclick="window.location.href='http://localhost:8081/'">
+  <div class="logo-container" onclick="window.location.href='index.html'">
     <img src="/img/logo.png" alt="Küpüthanem Logo" class="logo-img" />
     <span class="logo-text">Küpüthanem</span>
   </div>
   <nav>
     <a href="index-old.html" class="active">Kitaplar</a>
     <a href="#" onclick="goToDashboard()">Hesabım</a>
-    <a href="index.html">Çıkış</a>
+    <a href="login-register.html">Çıkış</a>
   </nav>
 </header>
 
+<section class="search-section">
+  <input type="text" id="searchInput" placeholder="Kitap ara..." />
+  <button id="searchBtn"><i class="fas fa-search"></i></button>
+</section>
+
 <h1>Arama Sonuçları</h1>
-<div class="container">
-  <div class="filters">
-    <h3>Filtrele</h3>
-
-    <div>
-      <h4>Kategori</h4>
-      <ul id="category-tree"></ul>
-    </div>
-
-    <div>
-      <h4>Yayınevi / Kanal</h4>
-      <ul id="publisher-tree"></ul>
-    </div>
-
-    <div id="static-filters"></div>
-  </div>
-
-
-
-  <div class="results" id="results"></div>
-</div>
+<div class="results" id="results"></div>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
     const query = params.get("q");
-
     const resultsContainer = document.getElementById("results");
-    const checkboxes = document.querySelectorAll(".filters input[type=checkbox]");
-
-    function getSelectedFilters() {
-      const filters = {};
-      checkboxes.forEach(cb => {
-        if (cb.checked) {
-          if (!filters[cb.name]) filters[cb.name] = [];
-          filters[cb.name].push(cb.value);
-        }
-      });
-      return filters;
-    }
-
-    function filterBooksLocally(books, filters) {
-      return books.filter(book => {
-        return Object.keys(filters).every(key => {
-          const value = book[key];
-          return value && filters[key].includes(value);
-        });
-      });
-    }
-
-    function displayBooks(books) {
-      resultsContainer.innerHTML = "";
-      if (books.length === 0) {
-        resultsContainer.innerHTML = "<p>Hiçbir sonuç bulunamadı.</p>";
-        return;
-      }
-      books.forEach(book => {
-        const div = document.createElement("div");
-        div.className = "book-card";
-        div.innerHTML = `
-                    <h3>${book.title}</h3>
-                    <p>Yazar: ${book.author}</p>
-                    <p>Yayın Yılı: ${book.year || "-"}</p>
-                    <p>Dil: ${book.language || "-"}</p>
-                    <p>Format: ${book.format || "-"}</p>
-                    <p>Raf: ${book.shelf || "-"}</p>
-                `;
-        resultsContainer.appendChild(div);
-      });
-    }
-
-    let allBooks = [];
 
     if (!query) {
       resultsContainer.innerHTML = "<p>Arama terimi girilmemiş.</p>";
@@ -209,20 +151,42 @@
               if (!res.ok) throw new Error("Arama yapılamadı");
               return res.json();
             })
-            .then((books) => {
-              allBooks = books;
-              displayBooks(allBooks);
+            .then(books => {
+              displayBooks(books);
             })
             .catch(err => {
               console.error(err);
               resultsContainer.innerHTML = "<p>Bir hata oluştu.</p>";
             });
 
-    checkboxes.forEach(cb => cb.addEventListener("change", () => {
-      const activeFilters = getSelectedFilters();
-      const filtered = filterBooksLocally(allBooks, activeFilters);
-      displayBooks(filtered);
-    }));
+    function displayBooks(books) {
+      resultsContainer.innerHTML = "";
+      if (books.length === 0) {
+        resultsContainer.innerHTML = "<p>Hiçbir sonuç bulunamadı.</p>";
+        return;
+      }
+
+      books.forEach(book => {
+        const div = document.createElement("div");
+        div.className = "book-card";
+        div.innerHTML = `
+          <h3>${book.title}</h3>
+          <p>Yazar: ${book.author}</p>
+          <p>Yayın Yılı: ${book.year || "-"}</p>
+          <p>Dil: ${book.language || "-"}</p>
+          <p>Format: ${book.format || "-"}</p>
+          <p>Raf: ${book.shelf || "-"}</p>
+        `;
+        resultsContainer.appendChild(div);
+      });
+    }
+  });
+
+  document.getElementById("searchBtn").addEventListener("click", () => {
+    const query = document.getElementById("searchInput").value.trim();
+    if (query) {
+      window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+    }
   });
 
   function goToDashboard() {
@@ -240,60 +204,6 @@
       alert("Geçersiz rol: " + user.role);
     }
   }
-  function renderTree(nodes, parentEl, fieldName) {
-    nodes.forEach(node => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-            <label>
-                <input type="checkbox" name="${fieldName}" value="${node.id}">
-                ${node.name}
-            </label>
-        `;
-      parentEl.appendChild(li);
-      if (node.children && node.children.length) {
-        const ul = document.createElement('ul');
-        li.appendChild(ul);
-        renderTree(node.children, ul, fieldName);
-      }
-    });
-  }
-
-  function fetchAndRenderTree(endpoint, treeId, fieldName) {
-    return fetch(endpoint)
-            .then(res => res.json())
-            .then(tree => renderTree(tree, document.getElementById(treeId), fieldName))
-            .catch(console.warn);
-  }
-
-  function getFilters() {
-    const filters = {};
-    document.querySelectorAll('.filters input[type="checkbox"]').forEach(cb => {
-      if (!filters[cb.name]) filters[cb.name] = new Set();
-      if (cb.checked) filters[cb.name].add(cb.value);
-    });
-    return filters;
-  }
-
-  function applyFilters() {
-    const filters = getFilters();
-    const filtered = allBooks.filter(book => {
-      return Object.entries(filters).every(([key, set]) => {
-        // book[key] mutlaka property isimleriyle eşleşmeli (book.language, book.format vs.)
-        return set.size === 0 || set.has(String(book[key]));
-      });
-    });
-    displayBooks(filtered);
-  }
-
-  document.querySelector('.filters').addEventListener('change', applyFilters);
-
-  Promise.all([
-    fetchAndRenderTree('/api/categories/tree', 'category-tree', 'category'),
-    fetchAndRenderTree('/api/publishers/tree', 'publisher-tree', 'publisher')
-  ]).finally(() => {
-    loadBooks();
-  });
-
 </script>
 
 </body>
