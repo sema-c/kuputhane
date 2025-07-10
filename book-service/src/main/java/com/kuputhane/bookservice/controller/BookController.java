@@ -54,8 +54,16 @@ public class BookController {
                 .title(dto.getTitle())
                 .author(dto.getAuthor())
                 .year(dto.getYear())
+                .location(dto.getLocation())
+                .format(dto.getFormat())
+                .language(dto.getLanguage())
+                .imageUrl(dto.getImageUrl())
+                .isbn(dto.getIsbn())
+                .categoryId(dto.getCategoryId())
+                .publisherId(dto.getPublisherId())
                 .available(true)
                 .build();
+
         Book saved = service.save(b);
         return ResponseEntity.ok(toDto(saved));
     }
@@ -69,6 +77,13 @@ public class BookController {
                 .title(dto.getTitle())
                 .author(dto.getAuthor())
                 .year(dto.getYear())
+                .location(dto.getLocation())
+                .format(dto.getFormat())
+                .language(dto.getLanguage())
+                .imageUrl(dto.getImageUrl())
+                .isbn(dto.getIsbn())
+                .categoryId(dto.getCategoryId())
+                .publisherId(dto.getPublisherId())
                 .available(dto.getAvailable() != null && dto.getAvailable())
                 .dueDate(dto.getDueDate())
                 .borrowedBy(dto.getBorrowedBy())
@@ -148,20 +163,24 @@ public class BookController {
         String publisherName = null;
         if (b.getCategoryId() != null) {
             categoryName = categoryRepo.findById(b.getCategoryId())
-                    .map(Category::getName)
-                    .orElse("Bilinmiyor");
+                    .map(Category::getName).orElse("Bilinmiyor");
         }
-
         if (b.getPublisherId() != null) {
             publisherName = publisherRepo.findById(b.getPublisherId())
-                    .map(Publisher::getName)
-                    .orElse("Bilinmiyor");
+                    .map(Publisher::getName).orElse("Bilinmiyor");
         }
         return BookDTO.builder()
                 .id(b.getId())
                 .title(b.getTitle())
                 .author(b.getAuthor())
                 .year(b.getYear())
+                .location(b.getLocation())
+                .format(b.getFormat())
+                .language(b.getLanguage())
+                .imageUrl(b.getImageUrl())
+                .isbn(b.getIsbn())
+                .categoryId(b.getCategoryId())
+                .publisherId(b.getPublisherId())
                 .available(b.isAvailable())
                 .dueDate(b.getDueDate())
                 .borrowedBy(b.getBorrowedBy())

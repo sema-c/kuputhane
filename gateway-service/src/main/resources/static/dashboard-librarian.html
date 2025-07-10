@@ -60,11 +60,29 @@
 
     <section id="permission-add-book">
         <h2>➕ Yeni Kitap Ekle</h2>
-        <input type="text" id="newBookTitle"     class="form-input" placeholder="Kitap Adı"/>
-        <input type="text" id="newBookAuthor"    class="form-input" placeholder="Yazar"/>
-        <input type="text" id="newBookShelf"     class="form-input" placeholder="Raf No"/>
-        <input type="number" id="newBookYear"    class="form-input" placeholder="Basım Yılı"/>
-        <input type="text" id="newBookLocation"  class="form-input" placeholder="Konum"/>
+        <input type="text"   id="newBookTitle"       class="form-input" placeholder="Kitap Adı"/>
+        <input type="text"   id="newBookAuthor"      class="form-input" placeholder="Yazar"/>
+        <input type="number" id="newBookYear"        class="form-input" placeholder="Basım Yılı"/>
+        <input type="text"   id="newBookLocation"    class="form-input" placeholder="Konum"/>
+        <select id="newBookCategoryId" class="form-input">
+            <option value="">Kategori Seçin</option>
+            <option value="1">Roman</option>
+            <option value="2">Bilim Kurgu</option>
+            <option value="3">Tarih</option>
+            <option value="4">Sanat</option>
+        </select>
+
+        <select id="newBookPublisherId" class="form-input">
+            <option value="">Yayınevi Seçin</option>
+            <option value="1">Can Yayınları</option>
+            <option value="2">Yapı Kredi Yayınları</option>
+            <option value="3">İletişim Yayınları</option>
+            <option value="4">Pegasus Yayınları</option>
+        </select>
+        <input type="text"   id="newBookIsbn"        class="form-input" placeholder="ISBN"/>
+        <input type="text"   id="newBookFormat"      class="form-input" placeholder="Format"/>
+        <input type="text"   id="newBookLanguage"    class="form-input" placeholder="Dil"/>
+        <input type="text"   id="newBookImageUrl"    class="form-input" placeholder="Resim URL"/>
         <button onclick="addNewBook()">Ekle</button>
     </section>
 
@@ -199,33 +217,49 @@
             window.location.href = "dashboard-user.html";
         }
     }
-        function addNewBook() {
-        const title = document.getElementById("newBookTitle").value;
-        const author = document.getElementById("newBookAuthor").value;
 
-        if (!title || !author) {
-        alert("Lütfen kitap adı ve yazar giriniz.");
-        return;
-    }
+    function addNewBook() {
+        const title       = document.getElementById("newBookTitle").value.trim();
+        const author      = document.getElementById("newBookAuthor").value.trim();
+        const year        = +document.getElementById("newBookYear").value;
+        const location    = document.getElementById("newBookLocation").value.trim();
+        const categoryId  = +document.getElementById("newBookCategoryId").value;
+        const publisherId = +document.getElementById("newBookPublisherId").value;
+        const isbn        = document.getElementById("newBookIsbn").value.trim();
+        const format      = document.getElementById("newBookFormat").value.trim();
+        const language    = document.getElementById("newBookLanguage").value.trim();
+        const imageUrl    = document.getElementById("newBookImageUrl").value.trim();
+
+        if (!title||!author||!year||!location||!categoryId||!publisherId||!isbn||!format||!language||!imageUrl) {
+            return alert("Lütfen tüm alanları doldurun.");
+        }
 
         const newBook = {
-        title: title,
-        author: author,
-        available: true
-    };
+            title, author, year, location,
+            categoryId, publisherId, isbn,
+            format, language, imageUrl,
+            available: true
+        };
 
-        fetch("http://localhost:8082/api/books", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newBook)
-    })
-        .then(res => {
-        if (!res.ok) throw new Error("Ekleme başarısız");
-        return res.text();
-    })
-        .then(msg => alert("✅ " + msg))
-        .catch(err => alert("Hata: " + err.message));
+        fetch("/api/books", {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify(newBook)
+        })
+            .then(res=>res.ok?res.json():Promise.reject(res.status))
+            .then(dto=>{
+                alert("✅ Kitap eklendi: "+dto.title);
+                ["newBookTitle","newBookAuthor","newBookYear","newBookLocation",
+                    "newBookCategoryId","newBookPublisherId","newBookIsbn",
+                    "newBookFormat","newBookLanguage","newBookImageUrl"]
+                    .forEach(id=>document.getElementById(id).value="");
+                loadLateBooks();
+                refreshStats();
+            })
+            .catch(err=>alert("Kitap ekleme hatası: "+err));
     }
+
+
 </script>
 </body>
 </html>
