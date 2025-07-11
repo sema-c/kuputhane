@@ -72,7 +72,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user, @RequestHeader("role") String requesterRole) {
+    public ResponseEntity<?> updateUser(@PathVariable Long id,
+                                        @RequestBody User user,
+                                        @RequestParam(value = "role", required = false) String requesterRole) {
         boolean isLibrarian = RoleAccessChecker.hasAccess(requesterRole, "LIBRARIAN", roleTree);
 
         boolean isSelfUpdate = Objects.equals(id, user.getId()) || user.getId() == null;
