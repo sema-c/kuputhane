@@ -67,9 +67,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, User user) {
-        user.setId(id);
-        return userRepository.save(user);
+    public User updateUser(Long id, User incomingUser) {
+        System.out.println("Güncelleme isteği: id=" + id + ", incomingUser=" + incomingUser);
+        User existing = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (incomingUser.getEmail() != null) {
+            existing.setEmail(incomingUser.getEmail());
+        }
+        if (incomingUser.getPhoneNumber() != null) {
+            existing.setPhoneNumber(incomingUser.getPhoneNumber());
+        }
+
+        User savedUser = userRepository.save(existing);
+        System.out.println("Güncellenen kullanıcı: " + savedUser);
+        return savedUser;
     }
 
     @Override

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -72,10 +73,15 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user, @RequestHeader("role") String requesterRole) {
-        if (!RoleAccessChecker.hasAccess(requesterRole, "LIBRARIAN", roleTree)) {
+        boolean isLibrarian = RoleAccessChecker.hasAccess(requesterRole, "LIBRARIAN", roleTree);
+
+        boolean isSelfUpdate = Objects.equals(id, user.getId()) || user.getId() == null;
+
+        if (!isLibrarian && !isSelfUpdate) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Erişim reddedildi");
         }
 
+        user.setId(id);
         return ResponseEntity.ok(userService.updateUser(id, user));
     }
 

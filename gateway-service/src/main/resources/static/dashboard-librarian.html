@@ -32,6 +32,7 @@
         <span class="logo-text">Küpüthanem</span>
     </div>
     <nav>
+        <a href="kitapara.html">Kitap Ara</a>
         <a href="#" onclick="goToDashboard()">Hesabım</a>
         <a href="login-register.html" onclick="logout()">Çıkış</a>
     </nav>
@@ -41,7 +42,16 @@
         <h2>👤 Kullanıcı Bilgileri</h2>
         <p>Ad Soyad: <strong id="userFullName">-</strong></p>
         <p>Email: <strong id="userEmail">-</strong></p>
+        <p>Telefon: <strong id="userPhone">-</strong></p>
         <p>Rol: <strong id="userRole">-</strong></p>
+
+        <button onclick="toggleEditForm()">Bilgileri Güncelle</button>
+
+        <div id="editUserForm" style="display: none; margin-top: 1rem;">
+            <input type="email" id="editEmail" class="form-input" placeholder="Yeni Email" />
+            <input type="text" id="editPhone" class="form-input" placeholder="Yeni Telefon Numarası" />
+            <button onclick="updateUserInfo()">Kaydet</button>
+        </div>
     </section>
 
     <section id="permission-lend-book">
@@ -129,6 +139,7 @@
         const user = JSON.parse(userJson);
         document.getElementById("userFullName").textContent = `${user.firstName} ${user.lastName}`;
         document.getElementById("userEmail").textContent = user.email;
+        document.getElementById("userPhone").textContent = user.phoneNumber || "-";
         document.getElementById("userRole").textContent = user.role;
 
         fetch(`http://localhost:8081/api/users/${user.id}/permissions`)
@@ -310,7 +321,46 @@
             })
             .catch(() => alert("❌ Sunucuya ulaşılamadı."));
     }
+    function toggleEditForm() {
+        const form = document.getElementById("editUserForm");
+        form.style.display = form.style.display === "none" ? "block" : "none";
 
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        document.getElementById("editEmail").value = user.email;
+        document.getElementById("editPhone").value = user.phoneNumber || "";
+    }
+
+    function updateUserInfo() {
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        const updatedData = {
+            id: user.id,
+            email: document.getElementById("editEmail").value.trim(),
+            phoneNumber: document.getElementById("editPhone").value.trim(),
+            role: user.role
+        };
+
+        fetch(`http://localhost:8081/api/users/${user.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "role": user.role
+            },
+            body: JSON.stringify(updatedData)
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Güncelleme başarısız");
+                return res.json();
+            })
+            .then(data => {
+                alert("✅ Bilgiler güncellendi!");
+
+                localStorage.setItem("loggedInUser", JSON.stringify(data));
+                document.getElementById("userEmail").textContent = data.email;
+                document.getElementById("userPhone").textContent = data.phoneNumber || "-";
+                document.getElementById("editUserForm").style.display = "none";
+            })
+            .catch(err => alert("❌ Hata: " + err.message));
+    }
 
 </script>
 </body>
