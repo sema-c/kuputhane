@@ -124,8 +124,18 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> searchBooks(String query) {
-        return bookRepository.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(query, query);
+    public List<Book> searchBooks(String q,
+                                  String format,
+                                  String language,
+                                  Long categoryId,
+                                  Long publisherId) {
+        return bookRepository.findAll().stream()
+                .filter(b -> b.getTitle().toLowerCase().contains(q.toLowerCase()))
+                .filter(b -> format       == null || format.isBlank()    || b.getFormat().equalsIgnoreCase(format))
+                .filter(b -> language     == null || language.isBlank()  || b.getLanguage().equalsIgnoreCase(language))
+                .filter(b -> categoryId   == null                      || categoryId.equals(b.getCategoryId()))
+                .filter(b -> publisherId  == null                      || publisherId.equals(b.getPublisherId()))
+                .toList();
     }
 
     @Override
@@ -137,4 +147,7 @@ public class BookServiceImpl implements BookService {
     public List<Book> getSoonDueBooks(Long userId) {
         return bookRepository.findSoonDueBooks(userId, LocalDate.now().plusDays(3));
     }
+
+
 }
+

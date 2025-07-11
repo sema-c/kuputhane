@@ -132,8 +132,14 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam("q") String query) {
-        List<Book> books = service.searchBooks(query);
+    public ResponseEntity<List<BookDTO>> searchBooks(
+            @RequestParam("q") String query,
+            @RequestParam(value = "format",    required = false) String format,
+            @RequestParam(value = "language",  required = false) String language,
+            @RequestParam(value = "category",  required = false) Long   categoryId,
+            @RequestParam(value = "publisher", required = false) Long   publisherId) {
+
+        List<Book> books = service.searchBooks(query, format, language, categoryId, publisherId);
         List<BookDTO> dtos = books.stream().map(this::toDto).toList();
         return ResponseEntity.ok(dtos);
     }
