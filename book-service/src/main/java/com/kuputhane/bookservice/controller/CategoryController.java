@@ -16,6 +16,6 @@ public class CategoryController {
 
     @GetMapping
     public List<Category> all() {
-        return (List<Category>) repo.findAll();
+        return repo.findAll();
     }
 }

@@ -111,7 +111,6 @@
                 </configuration>
             </plugin>
 
-
             <!-- protobuf plugin -->
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>

@@ -12,7 +12,6 @@ public class RoleAccessChecker {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -26,7 +25,6 @@ public class RoleAccessChecker {
                 return true;
             }
         }
-
         return false;
     }
 }

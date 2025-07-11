@@ -16,5 +16,4 @@ public class RegisterResponse {
         this.username = username;
         this.role = role;
     }
-
 }

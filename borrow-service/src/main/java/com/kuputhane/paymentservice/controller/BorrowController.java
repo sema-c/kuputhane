@@ -14,12 +14,10 @@ import java.util.Map;
 public class BorrowController {
 
     private final BorrowService borrowService;
-    private final BorrowRecordRepository borrowRepository;
 
     @Autowired
     public BorrowController(BorrowService borrowService, BorrowRecordRepository borrowRepository) {
         this.borrowService = borrowService;
-        this.borrowRepository = borrowRepository;
     }
 
     @PostMapping

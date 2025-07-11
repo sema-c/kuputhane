@@ -41,7 +41,6 @@ public class PermissionServiceImpl implements PermissionService {
         for (AccessPermission perm : basePermissions) {
             result.addAll(fetchChildren(perm));
         }
-
         return new ArrayList<>(result);
     }
 
@@ -52,7 +51,6 @@ public class PermissionServiceImpl implements PermissionService {
         for (AccessPermission child : children) {
             result.addAll(fetchChildren(child));
         }
-
         return result;
     }
 

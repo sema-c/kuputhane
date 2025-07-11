@@ -8,6 +8,4 @@ import lombok.Setter;
 public class BorrowRequest {
     private Long userId;
     private Long bookId;
-
-
 }

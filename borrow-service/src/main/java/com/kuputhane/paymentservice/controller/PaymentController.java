@@ -14,11 +14,9 @@ import java.util.List;
 public class PaymentController {
 
     private PaymentService service;
-    private final PaymentRepository paymentRepository;
 
     public PaymentController(PaymentService service, PaymentRepository paymentRepository) {
         this.service = service;
-        this.paymentRepository = paymentRepository;
     }
 
     @GetMapping

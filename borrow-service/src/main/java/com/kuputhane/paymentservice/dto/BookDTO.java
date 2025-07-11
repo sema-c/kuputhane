@@ -8,5 +8,4 @@ import lombok.Setter;
 public class BookDTO {
     private Long id;
     private boolean available;
-
 }

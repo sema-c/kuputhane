@@ -1,12 +1,9 @@
 package com.kuputhane.bookservice.repository;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import com.kuputhane.bookservice.model.Publisher;
+import org.springframework.stereotype.Repository;
 
-public interface PublisherRepository extends CrudRepository<Publisher, Long> {
-
-    @Query("SELECT p.name FROM Publisher p WHERE p.id = :id")
-    String findPublisherNameById(@Param("id") Long id);
-}
+@Repository
+public interface PublisherRepository extends JpaRepository<Publisher, Long> { }

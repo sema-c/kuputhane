@@ -16,6 +16,6 @@ public class PublisherController {
 
     @GetMapping
     public List<Publisher> all() {
-        return (List<Publisher>) repo.findAll();
+        return repo.findAll();
     }
 }

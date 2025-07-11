@@ -75,5 +75,4 @@ public class PermissionController {
         }
         return ResponseEntity.ok(false);
     }
-
 }

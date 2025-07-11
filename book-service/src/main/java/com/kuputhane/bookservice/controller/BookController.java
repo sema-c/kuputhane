@@ -31,7 +31,6 @@ import java.util.Map;
 public class BookController {
 
     private final BookService service;
-    private final BookRepository repo;
     private final CategoryRepository categoryRepo;
     private final PublisherRepository publisherRepo;
 

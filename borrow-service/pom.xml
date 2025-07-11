@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.kuputhane</groupId>
-    <artifactId>payment-service</artifactId>
+    <artifactId>borrow-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>payment-service</name>
 

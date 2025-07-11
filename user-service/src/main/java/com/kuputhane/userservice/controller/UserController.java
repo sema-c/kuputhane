@@ -8,6 +8,7 @@ import com.kuputhane.userservice.service.UserService;
 import com.kuputhane.userservice.util.RoleAccessChecker;
 import com.kuputhane.userservice.util.RoleHierarchyBuilder;
 import com.kuputhane.userservice.util.RoleNode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +20,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
-
+    private final UserService userService;
+    private final UserRepository userRepository;
     private final RoleNode roleTree = RoleHierarchyBuilder.buildRoleTree();
 
     @GetMapping

@@ -34,5 +34,4 @@ public class User {
     @CollectionTable(name = "user_permissions", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "permission_id")
     private Set<Long> permissionIds = new HashSet<>();
-
 }

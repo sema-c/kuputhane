@@ -19,5 +19,4 @@ public interface UserService {
     List<User> getAllUsers();
 
     List<AccessPermission> getPermissionsByUserId(Long userId);
-
 }

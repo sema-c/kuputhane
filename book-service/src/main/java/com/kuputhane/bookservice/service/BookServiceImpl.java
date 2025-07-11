@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -112,7 +111,7 @@ public class BookServiceImpl implements BookService {
             return ResponseEntity.badRequest().body("Teslim tarihi uzatılamaz.");
         }
 
-        book.setDueDate(book.getDueDate().plusDays(7)); // 7 gün uzatma
+        book.setDueDate(book.getDueDate().plusDays(7));
         bookRepository.save(book);
 
         return ResponseEntity.ok("Teslim tarihi uzatıldı.");
@@ -147,7 +146,4 @@ public class BookServiceImpl implements BookService {
     public List<Book> getSoonDueBooks(Long userId) {
         return bookRepository.findSoonDueBooks(userId, LocalDate.now().plusDays(3));
     }
-
-
 }
-
