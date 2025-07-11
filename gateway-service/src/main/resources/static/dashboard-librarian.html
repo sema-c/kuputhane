@@ -95,6 +95,12 @@
                 <li>Aktif Kullanıcı: <strong id="statTotalUsers">–</strong></li>
             </ul>
         </section>
+
+        <section id="permission-delete-book">
+            <h2>🗑️ Kitap Sil</h2>
+            <input type="number" id="deleteBookId" class="form-input" placeholder="Kitap ID" />
+            <button onclick="deleteBook()">Sil</button>
+        </section>
     </div>
 
 </main>
@@ -282,6 +288,29 @@
                 alert(err.message);
             });
     }
+
+    function deleteBook() {
+        const id = Number(document.getElementById("deleteBookId").value);
+        if (!id) {
+            return alert("Lütfen silinecek Kitap ID girin.");
+        }
+
+        fetch(`/api/books/${id}`, {
+            method: "DELETE"
+        })
+            .then(res => {
+                if (res.ok) {
+                    alert("✅ Kitap başarıyla silindi.");
+                    document.getElementById("deleteBookId").value = "";
+                    loadLateBooks();
+                    refreshStats();
+                } else {
+                    alert("❌ Kitap silme hatası: " + res.status);
+                }
+            })
+            .catch(() => alert("❌ Sunucuya ulaşılamadı."));
+    }
+
 
 </script>
 </body>
