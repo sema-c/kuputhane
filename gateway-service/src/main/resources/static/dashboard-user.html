@@ -143,7 +143,15 @@
         <h2>👤 Kullanıcı Bilgileri</h2>
         <p>Ad Soyad: <strong id="userFullName">-</strong></p>
         <p>Email: <strong id="userEmail">-</strong></p>
+        <p>Telefon: <strong id="userPhone">-</strong></p>
         <p>Rol: <strong id="userRole">-</strong></p>
+
+        <button onclick="toggleEditForm()">Bilgileri Güncelle</button>
+        <div id="editUserForm" style="display: none; margin-top: 1rem;">
+            <input type="email" id="editEmail" class="form-input" placeholder="Yeni Email" />
+            <input type="text" id="editPhone" class="form-input" placeholder="Yeni Telefon Numarası" />
+            <button onclick="updateUserInfo()">Kaydet</button>
+        </div>
     </section>
 
     <section id="borrowed-section">
@@ -155,7 +163,6 @@
         <h2>📆 Teslim Tarihi Yakın Kitaplar</h2>
         <ul id="soonDueBooks"></ul>
     </section>
-
 </main>
 
 <footer>
@@ -181,17 +188,44 @@
         }
     });
 
-    function returnBook(bookId) {
-        fetch(`${BOOK_SERVICE}/return?bookId=${bookId}`, {
-            method: "POST"
-        })
-            .then(r => r.text())
-            .then(alert)
-            .then(() => location.reload());
+    function toggleEditForm() {
+        const form = document.getElementById("editUserForm");
+        form.style.display = form.style.display === "none" ? "block" : "none";
+
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        document.getElementById("editEmail").value = user.email;
+        document.getElementById("editPhone").value = user.phoneNumber || "";
     }
 
-    function hasPermission(action, resource, permissions) {
-        return permissions.some(p => p.action === action && p.resource === resource);
+    function updateUserInfo() {
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        const updatedData = {
+            id: user.id,
+            email: document.getElementById("editEmail").value.trim(),
+            phoneNumber: document.getElementById("editPhone").value.trim(),
+            role: user.role
+        };
+
+        fetch(`http://localhost:8081/api/users/${user.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "role": user.role
+            },
+            body: JSON.stringify(updatedData)
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Güncelleme başarısız");
+                return res.json();
+            })
+            .then(data => {
+                alert("✅ Bilgiler güncellendi!");
+                localStorage.setItem("loggedInUser", JSON.stringify(data));
+                document.getElementById("userEmail").textContent = data.email;
+                document.getElementById("userPhone").textContent = data.phoneNumber || "-";
+                document.getElementById("editUserForm").style.display = "none";
+            })
+            .catch(err => alert("❌ Hata: " + err.message));
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -206,11 +240,9 @@
 
         const user = JSON.parse(userJson);
         document.getElementById("userFullName").textContent =
-            (user.firstName && user.lastName)
-                ? `${user.firstName} ${user.lastName}`
-                : user.username;
-
+            (user.firstName && user.lastName) ? `${user.firstName} ${user.lastName}` : user.username;
         document.getElementById("userEmail").textContent = user.email || "-";
+        document.getElementById("userPhone").textContent = user.phoneNumber || "-";
         document.getElementById("userRole").textContent = user.role || "-";
 
         fetch(`${BOOK_SERVICE}/borrowed/${userId}`)
@@ -241,34 +273,16 @@
                     list.appendChild(li);
                 });
             });
-
-        fetch(`http://localhost:8084/api/permissions/role/${user.roleId}`)
-            .then(res => res.json())
-            .then(permissions => {
-                const list = document.getElementById("userPermissions");
-                list.innerHTML = "";
-                permissions.forEach(p => {
-                    const li = document.createElement("li");
-                    li.textContent = `${p.action} → ${p.resource}`;
-                    list.appendChild(li);
-                });
-
-                if (!hasPermission("VIEW_BORROWED_BOOKS", "BOOK", permissions)) {
-                    document.getElementById("borrowed-section").style.display = "none";
-                }
-                if (!hasPermission("VIEW_SOON_DUE_BOOKS", "BOOK", permissions)) {
-                    document.getElementById("due-section").style.display = "none";
-                }
-                if (!hasPermission("VIEW_PERMISSIONS", "USER", permissions)) {
-                    document.getElementById("permission-section").style.display = "none";
-                }
-            })
-            .catch(err => {
-                const list = document.getElementById("userPermissions");
-                list.innerHTML = "<li>Erişim izinleri yüklenemedi.</li>";
-                console.error("Permission fetch failed", err);
-            });
     });
+
+    function returnBook(bookId) {
+        fetch(`${BOOK_SERVICE}/return?bookId=${bookId}`, {
+            method: "POST"
+        })
+            .then(r => r.text())
+            .then(alert)
+            .then(() => location.reload());
+    }
 
     function goToDashboard() {
         const user = JSON.parse(localStorage.getItem("loggedInUser"));
