@@ -14,7 +14,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +63,6 @@ public class BookController {
                 .location(dto.getLocation())
                 .format(dto.getFormat())
                 .language(dto.getLanguage())
-                .imageUrl(dto.getImageUrl())
                 .isbn(dto.getIsbn())
                 .categoryId(dto.getCategoryId())
                 .publisherId(dto.getPublisherId())
@@ -80,7 +85,6 @@ public class BookController {
                 .location(dto.getLocation())
                 .format(dto.getFormat())
                 .language(dto.getLanguage())
-                .imageUrl(dto.getImageUrl())
                 .isbn(dto.getIsbn())
                 .categoryId(dto.getCategoryId())
                 .publisherId(dto.getPublisherId())
@@ -177,7 +181,6 @@ public class BookController {
                 .location(b.getLocation())
                 .format(b.getFormat())
                 .language(b.getLanguage())
-                .imageUrl(b.getImageUrl())
                 .isbn(b.getIsbn())
                 .categoryId(b.getCategoryId())
                 .publisherId(b.getPublisherId())
@@ -188,5 +191,22 @@ public class BookController {
                 .categoryName(categoryName)
                 .publisherName(publisherName)
                 .build();
+    }
+
+
+    @PostMapping("/{id}/cover")
+    public ResponseEntity<Void> uploadCover(
+            @PathVariable Long id,
+            @RequestParam("cover") MultipartFile file) throws IOException {
+        if (!file.getOriginalFilename().toLowerCase().endsWith(".jpg")) {
+            return ResponseEntity
+                    .badRequest()
+                    .build();
+        }
+        Path imgDir = Paths.get("src/main/resources/static/img");
+        if (!Files.exists(imgDir)) Files.createDirectories(imgDir);
+        Path out = imgDir.resolve(id + ".jpg");
+        Files.copy(file.getInputStream(), out, StandardCopyOption.REPLACE_EXISTING);
+        return ResponseEntity.ok().build();
     }
 }

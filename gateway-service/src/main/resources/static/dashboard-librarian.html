@@ -74,7 +74,10 @@
         <input type="text" id="newBookIsbn" class="form-input" placeholder="ISBN" />
         <input type="text" id="newBookFormat" class="form-input" placeholder="Format" />
         <input type="text" id="newBookLanguage" class="form-input" placeholder="Dil" />
-        <input type="text" id="newBookImageUrl" class="form-input" placeholder="Resim URL" />
+        <label for="newBookCover" style="margin-top:1rem; display:block; color:var(--gold);">
+            📷 Kapak Yükle (JPG)
+        </label>
+        <input type="file" id="newBookCover" accept=".jpg" class="form-input" />
         <button onclick="addNewBook()">Ekle</button>
     </section>
 
@@ -222,16 +225,15 @@
         const isbn        = document.getElementById("newBookIsbn").value.trim();
         const format      = document.getElementById("newBookFormat").value.trim();
         const language    = document.getElementById("newBookLanguage").value.trim();
-        const imageUrl    = document.getElementById("newBookImageUrl").value.trim();
 
-        if (!title||!author||!year||!location||!categoryId||!publisherId||!isbn||!format||!language||!imageUrl) {
+        if (!title||!author||!year||!location||!categoryId||!publisherId||!isbn||!format||!language) {
             return alert("Lütfen tüm alanları doldurun.");
         }
 
         const newBook = {
             title, author, year, location,
             categoryId, publisherId, isbn,
-            format, language, imageUrl,
+            format, language,
             available: true
         };
 
@@ -245,14 +247,41 @@
                 alert("✅ Kitap eklendi: "+dto.title);
                 ["newBookTitle","newBookAuthor","newBookYear","newBookLocation",
                     "newBookCategoryId","newBookPublisherId","newBookIsbn",
-                    "newBookFormat","newBookLanguage","newBookImageUrl"]
+                    "newBookFormat","newBookLanguage"]
                     .forEach(id=>document.getElementById(id).value="");
                 loadLateBooks();
                 refreshStats();
+                uploadBookCover(dto.id);
             })
             .catch(err=>alert("Kitap ekleme hatası: "+err));
     }
 
+    function uploadBookCover(bookId) {
+        const fileInput = document.getElementById("newBookCover");
+        if (!fileInput.files.length) return;
+
+        const file = fileInput.files[0];
+        if (!/\.jpg$/i.test(file.name)) {
+            return alert("Sadece .jpg uzantılı dosya kabul ediliyor.");
+        }
+
+        const formData = new FormData();
+        formData.append("cover", file);
+
+        fetch(`/api/books/${bookId}/cover`, {
+            method: "POST",
+            body: formData
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Kapak yükleme başarısız: " + res.status);
+                alert("📷 Kapak başarıyla yüklendi!");
+                fileInput.value = "";
+            })
+            .catch(err => {
+                console.error(err);
+                alert(err.message);
+            });
+    }
 
 </script>
 </body>

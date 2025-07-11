@@ -19,7 +19,6 @@ public class Book {
     private String location;
     private String format;
     private String language;
-    private String imageUrl;
     private String isbn;
     private boolean available;
     private LocalDate borrowDate;

@@ -16,7 +16,6 @@ public class BookDTO {
     private String location;
     private String format;
     private String language;
-    private String imageUrl;
     private String isbn;
     private Long categoryId;
     private Long publisherId;
