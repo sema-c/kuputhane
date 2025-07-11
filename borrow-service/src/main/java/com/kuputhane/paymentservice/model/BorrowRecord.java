@@ -35,4 +35,6 @@ public class BorrowRecord {
     @Column(name = "punishment_applied")
     private Boolean punishmentApplied;
 
+    public void setDueDate(LocalDate localDate) {
+    }
 }
