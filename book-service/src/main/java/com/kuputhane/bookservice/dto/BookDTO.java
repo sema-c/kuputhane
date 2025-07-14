@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
+
 public class BookDTO {
     private Long id;
     private String title;

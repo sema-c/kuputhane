@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // === GİRİŞ / KAYIT ===
     const form = document.getElementById("auth-form");
     const formTitle = document.getElementById("form-title");
     const toggleButton = document.getElementById("toggle-button");
@@ -11,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (form) {
         let isLogin = true;
 
-        // Giriş <-> Kayıt geçişi
         toggleButton.addEventListener("click", () => {
             isLogin = !isLogin;
             formTitle.textContent = isLogin ? "Giriş Yap" : "Kayıt Ol";
@@ -54,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return true;
         }
 
-        // Form gönderimi
         form.addEventListener("submit", (e) => {
             e.preventDefault();
 
@@ -114,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // === ANA SAYFA / ARAMA BUTONU ===
     const btn = document.getElementById('searchBtn');
     const input = document.getElementById('searchInput');
 

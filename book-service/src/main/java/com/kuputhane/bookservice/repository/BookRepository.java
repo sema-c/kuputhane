@@ -26,5 +26,4 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT b FROM Book b WHERE b.borrowedBy = :userId AND b.dueDate <= :maxDate AND b.returned = false")
     List<Book> findSoonDueBooks(@Param("userId") Long userId,
                                 @Param("maxDate") LocalDate maxDate);
-
 }

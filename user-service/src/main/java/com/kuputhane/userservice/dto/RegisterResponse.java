@@ -9,9 +9,6 @@ public class RegisterResponse {
     private String username;
     private String role;
 
-    public RegisterResponse() {
-    }
-
     public RegisterResponse(String username, String role) {
         this.username = username;
         this.role = role;

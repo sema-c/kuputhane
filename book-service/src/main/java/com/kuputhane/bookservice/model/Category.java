@@ -7,6 +7,7 @@ import lombok.*;
 @Table(name = "categories")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor @Builder
+
 public class Category {
     @Id
     @Column(name = "category_id")

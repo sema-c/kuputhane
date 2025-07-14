@@ -198,7 +198,6 @@ public class BookController {
                 .build();
     }
 
-
     @PostMapping("/{id}/cover")
     public ResponseEntity<Void> uploadCover(
             @PathVariable Long id,

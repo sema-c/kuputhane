@@ -9,10 +9,10 @@ import java.time.LocalDate;
 @Table(name = "books")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor @Builder
+
 public class Book {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
     private String author;
     private Integer year;
@@ -27,5 +27,4 @@ public class Book {
     private boolean returned;
     private Long categoryId;
     private Long publisherId;
-
 }

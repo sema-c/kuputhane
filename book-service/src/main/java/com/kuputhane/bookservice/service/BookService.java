@@ -28,3 +28,4 @@ public interface BookService {
     List<Book> getBorrowedBooks(Long userId);
     List<Book> getSoonDueBooks(Long userId);
 }
+

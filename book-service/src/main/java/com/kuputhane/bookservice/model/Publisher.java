@@ -7,6 +7,7 @@ import lombok.*;
 @Table(name = "publishers")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor @Builder
+
 public class Publisher {
     @Id
     @Column(name = "publisher_id")

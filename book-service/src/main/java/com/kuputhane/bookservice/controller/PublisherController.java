@@ -19,3 +19,4 @@ public class PublisherController {
         return repo.findAll();
     }
 }
+

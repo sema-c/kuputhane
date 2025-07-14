@@ -2,7 +2,6 @@ package com.kuputhane.bookservice.service;
 
 import com.kuputhane.bookservice.model.Book;
 import com.kuputhane.bookservice.repository.BookRepository;
-import com.kuputhane.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
